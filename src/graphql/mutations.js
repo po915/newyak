@@ -259,3 +259,69 @@ export const deleteComment = /* GraphQL */ `
     }
   }
 `;
+export const createUserinfo = /* GraphQL */ `
+  mutation CreateUserinfo(
+    $input: CreateUserinfoInput!
+    $condition: ModelUserinfoConditionInput
+  ) {
+    createUserinfo(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUserinfo = /* GraphQL */ `
+  mutation UpdateUserinfo(
+    $input: UpdateUserinfoInput!
+    $condition: ModelUserinfoConditionInput
+  ) {
+    updateUserinfo(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserinfo = /* GraphQL */ `
+  mutation DeleteUserinfo(
+    $input: DeleteUserinfoInput!
+    $condition: ModelUserinfoConditionInput
+  ) {
+    deleteUserinfo(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;

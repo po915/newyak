@@ -150,3 +150,48 @@ export const listComments = /* GraphQL */ `
     }
   }
 `;
+export const getUserinfo = /* GraphQL */ `
+  query GetUserinfo($id: ID!) {
+    getUserinfo(id: $id) {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserinfos = /* GraphQL */ `
+  query ListUserinfos(
+    $filter: ModelUserinfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserinfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

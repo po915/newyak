@@ -6,3 +6,7 @@
     width: 200px;
     height: auto;
 }
+
+.country-select option {
+    max-width: 200px !important;
+}

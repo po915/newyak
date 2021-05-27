@@ -232,3 +232,60 @@ export const onDeleteComment = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUserinfo = /* GraphQL */ `
+  subscription OnCreateUserinfo {
+    onCreateUserinfo {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserinfo = /* GraphQL */ `
+  subscription OnUpdateUserinfo {
+    onUpdateUserinfo {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserinfo = /* GraphQL */ `
+  subscription OnDeleteUserinfo {
+    onDeleteUserinfo {
+      id
+      userID
+      name
+      gender
+      dob
+      bio
+      avatar
+      email
+      phone
+      website
+      country
+      createdAt
+      updatedAt
+    }
+  }
+`;

@@ -18,3 +18,17 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
   post: Post @connection(fields: ["postID"])
   content: String!
 }
+
+type Userinfo @model {
+  id: ID!
+  userID: String!
+  name: String!
+  gender: String!
+  dob: AWSDate!
+  bio: String!
+  avatar: String!
+  email: String!
+  phone: String!
+  website: String!
+  country: String!
+}

@@ -4,12 +4,27 @@ import { useForm, Controller } from "react-hook-form"
 import { Button, Media, Label, Row, Col, Input, FormGroup, Alert, Form } from "reactstrap"
 import { v4 as uuid } from "uuid"
 import Amplify, { Auth, API, Storage, graphqlOperation } from "aws-amplify"
-// import * as mutations from "@src/graphql/mutations.js"
+import S3FileUpload from "react-s3"
+
+import "react-country-dropdown/dist/index.css"
 
 // data is fake data! Do not care!
 const GeneralTabs = ({ data }) => {
+	useEffect(() => {
+		Auth.currentAuthenticatedUser().then((res) => {
+			setUserInfo(res)
+		})
+	}, [])
+
+	const config = {
+		bucketName: "yak009ab091abf9449fba198f486b302e7c104727-dev",
+		dirName: "image",
+		region: "us-east-1",
+		accessKeyId: "AKIAZWJ3ZC3OVURJRFFQ",
+		secretAccessKey: "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",
+	}
 	const [name, setName] = useState("")
-	const [email, setEmail] = useState("")
+	const [gender, setGender] = useState("none")
 	const [bio, setBio] = useState("")
 	const [dob, setDob] = useState()
 	const [country, setCountry] = useState()
@@ -24,12 +39,6 @@ const GeneralTabs = ({ data }) => {
 
 	const [userInfo, setUserInfo] = useState()
 
-	// useEffect(()=> {
-	// 	Auth.currentAuthenticatedUser().then((res) => {
-	// 		setUserInfo(res)
-	// 	})
-	// }, [])
-	
 	// const test = {
 	// 	data: "This is test API"
 	// }
@@ -46,45 +55,27 @@ const GeneralTabs = ({ data }) => {
 		return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
 	}
 
-	
-
-	// Storage.get("avatar.png", {expires: 300}).then((res) => {
-	// 	console.log(res);
-	// 	setAvatar(res)
-	// })
-
-	const Submit = () => {
-		console.log(name, email, phone, bio, dob, country, website)
+	function renameFile(originalFile, newName) {
+		return new File([originalFile], newName, {
+			type: originalFile.type,
+			lastModified: originalFile.lastModified,
+		})
 	}
 
+	const Submit = () => {}
 	const onChange = async (e) => {
 		let avatarFile = e.target.files[0]
 		let fileName = avatarFile.name
 		let fileExtension = getFileExtension(fileName)
-		let fileType = avatarFile.type
 		let finalName = uuid() + "." + fileExtension
+		let finalFile = renameFile(avatarFile, finalName)
 
-		console.log(fileName, finalName, fileType)
-		console.log(Storage)
-		await Storage.put(finalName, avatarFile, {
-			contentType: fileType,
-			// metadata: {
-			// 	sub: userInfo.username,
-			// 	email: userInfo.attributes.email,
-			// },
-		})
-			.then((res) => {
-				console.log(res, "Upload Result")
-				// const reader = new FileReader(),
-				// 	files = e.target.files
-				// reader.onload = function () {
-				// 	setAvatar(reader.result)
-				// }
-				// reader.readAsDataURL(files[0])
+		S3FileUpload.uploadFile(finalFile, config)
+			.then((data) => {
+				console.log(data)
+				setAvatar(data.location)
 			})
-			.catch((err) => {
-				console.log(err, "Upload Error")
-			})
+			.catch((err) => console.error(err))
 	}
 
 	return (
@@ -93,12 +84,11 @@ const GeneralTabs = ({ data }) => {
 				<Media className="mr-25" left>
 					<Media object className="rounded mr-50" src={avatar} alt="Generic placeholder image" height="80" width="80" />
 				</Media>
-				<Media className="mt-75 ml-1" body>
+				<Media className="my-auto ml-1" body>
 					<Button.Ripple tag={Label} className="mr-75" size="sm" color="primary">
 						Upload
-						<Input type="file" onChange={(e) => onChange(e)} hidden accept="image/*" />
+						<Input type="file" onChange={(e) => onChange(e)} accept="image/*" hidden />
 					</Button.Ripple>
-					<p>Allowed JPG, GIF or PNG. Max size of 800kB</p>
 				</Media>
 			</Media>
 			<Form className="mt-2">
@@ -106,13 +96,17 @@ const GeneralTabs = ({ data }) => {
 					<Col sm="6">
 						<FormGroup>
 							<Label for="username">Fullname</Label>
-							<Input type="text" value={name} placeholder="Enter your fullname" onChange={(e) => setName(e.target.value)} />
+							<Input type="text" placeholder="Enter your fullname" defaultValue={name} onChange={(e) => setName(e.target.value)} />
 						</FormGroup>
 					</Col>
 					<Col sm="6">
 						<FormGroup>
-							<Label for="email">E-mail</Label>
-							<Input type="email" value={email} placeholder="Email Address" onChange={(e) => setEmail(e.target.value)} />
+							<Label for="gender">Gender</Label>
+							<Input id="gender" type="select" name="gender" onChange={(e) => setGender(e.target.value)} defaultValue={gender}>
+								<option value="female">Female</option>
+								<option value="male">Male</option>
+								<option value="none">None</option>
+							</Input>
 						</FormGroup>
 					</Col>
 					<Col sm="12">
@@ -130,23 +124,23 @@ const GeneralTabs = ({ data }) => {
 					<Col sm="6">
 						<FormGroup>
 							<Label for="country">Country</Label>
-							<Input id="country" type="select" name="country" onChange={(e) => setCountry(e.target.value)}>
-								<option value="us">USA</option>
-								<option value="fr">France</option>
-								<option value="ca">Canada</option>
+							<Input id="country" type="select" name="country" onChange={(e) => setCountry(e.target.value)} defaultValue={country}>
+								<option value="venus">Venus</option>
+								<option value="earth">Earth</option>
+								<option value="Mars">Mars</option>
 							</Input>
 						</FormGroup>
 					</Col>
 					<Col sm="6">
 						<FormGroup>
 							<Label for="website">Website</Label>
-							<Input type="url" id="website" name="website" placeholder="Website Address" onChange={(e) => setWebsite(e.target.value)} />
+							<Input type="url" id="website" name="website" defaultValue={website} placeholder="Website Address" onChange={(e) => setWebsite(e.target.value)} />
 						</FormGroup>
 					</Col>
 					<Col sm="6">
 						<FormGroup>
 							<Label for="phone">Phone</Label>
-							<Input id="phone" name="phone" placeholder="Phone Number" onChange={(e) => setPhone(e.target.value)} />
+							<Input id="phone" name="phone" defaultValue={phone} placeholder="Phone Number" onChange={(e) => setPhone(e.target.value)} />
 						</FormGroup>
 					</Col>
 					<Col className="mt-1" sm="12">
