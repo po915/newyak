@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-yak-dev-104727-authRole",
+      "UnauthRoleArn": "arn:aws:iam::666382178013:role/amplify-yak-dev-104727-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::666382178013:role/amplify-yak-dev-104727-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-yak-dev-104727-deployment",
+      "UnauthRoleName": "amplify-yak-dev-104727-unauthRole",
+      "StackName": "amplify-yak-dev-104727",
+      "StackId": "arn:aws:cloudformation:us-east-1:666382178013:stack/amplify-yak-dev-104727/96872ec0-be8d-11eb-a049-12b4aab3bd0b",
+      "AmplifyAppId": "d2i84a2lek7tup"
+    },
+    "categories": {
+      "auth": {
+        "yakad53a51c": {}
+      }
+    }
+  }
+}
