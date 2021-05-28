@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from "react"
 import { Link, useHistory } from "react-router-dom"
-import { Auth, API } from "aws-amplify"
+import Amplify, { Auth, API, graphqlOperation } from "aws-amplify"
 import { useDispatch } from "react-redux"
 import { Card, CardBody, CardTitle, CardText, Form, FormGroup, Label, Input, Button } from "reactstrap"
 import { handleLogin } from "@store/actions/auth"
 import { AbilityContext } from "@src/utility/context/Can"
-
+import * as mutations from "@src/graphql/mutations"
 
 import "@styles/base/pages/page-auth.scss"
 
@@ -13,13 +13,13 @@ import logo from "../../../assets/images/logo/main-logo.png"
 
 const EmailVerify = () => {
 	const ability = useContext(AbilityContext)
-	// const username = useSelector(state => state.custom.username)
 	const history = useHistory()
 	const dispatch = useDispatch()
+	var temp = JSON.parse(localStorage.getItem("tempData"))
+	let email = temp.userData.user.username
+	let password = temp.password
 
-	let username = JSON.parse(localStorage.getItem("tempData")).userData.user.username
-
-	if (!username) {
+	if (!email) {
 		history.push("/login")
 	}
 
@@ -27,14 +27,13 @@ const EmailVerify = () => {
 
 	const resendCode = (e) => {
 		e.preventDefault()
-		Auth.resendSignUp(username).then((res) => {
+		Auth.resendSignUp(email).then((res) => {
 			console.log(res, "Resend Result")
 		})
 	}
-
 	const onSubmit = () => {
 		try {
-			Auth.confirmSignUp(username, code).then((res) => {
+			Auth.confirmSignUp(email, code).then((res) => {
 				if (res == "SUCCESS") {
 					ability.update([
 						{
@@ -42,26 +41,36 @@ const EmailVerify = () => {
 							subject: "all",
 						},
 					])
-					// set up local storage to local JWT
-					var temp = JSON.parse(localStorage.getItem("tempData"))
-					const userData = {
-						username: temp.userData.userSub,
-						accessToken: temp.accessToken,
-						refreshToken: temp.refreshToken,
-						email: temp.userData.user.username,
-						ability: temp.userData.ability,
-						role: "admin",
-					}
-					ability.update(temp.userData.ability)
-					dispatch(handleLogin(userData))
-					history.push("/dashboard")
 
-					const userInfo = {
-						id: temp.userData.userSub,
-						email: temp.userData.user.username,
-					}
+					Auth.signIn(email, password).then(async () => {
+						const user = await Auth.currentAuthenticatedUser()
+						console.log(user, "Current USer")
 
-					// const deletedTodo = await API.graphql({ query: mutations.deleteTodo, variables: {input: todoDetails}});
+						const input = {
+							name: temp.username,
+							email: email,
+						}
+
+						let result = await API.graphql(graphqlOperation(mutations.createUserinfo, { input: input }))
+						await Auth.updateUserAttributes(user, {
+							nickname: result.data.createUserinfo.id
+						}).then((res) => {
+							console.log(res, "Update result")
+						})
+						const userData = {
+							name: temp.username,
+							sub: temp.userData.userSub,
+							accessToken: temp.accessToken,
+							refreshToken: temp.refreshToken,
+							email: temp.userData.user.username,
+							ability: temp.userData.ability,
+							role: "admin",
+						}
+
+						ability.update(temp.userData.ability)
+						dispatch(handleLogin(userData))
+						history.push("/dashboard")
+					})
 				}
 			})
 		} catch (err) {

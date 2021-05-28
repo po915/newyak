@@ -21,14 +21,14 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
 
 type Userinfo @model {
   id: ID!
-  userID: String!
-  name: String!
-  gender: String!
-  dob: AWSDate!
-  bio: String!
-  avatar: String!
-  email: String!
-  phone: String!
-  website: String!
-  country: String!
+  userID: String
+  name: String
+  gender: String
+  dob: String
+  bio: String
+  avatar: String
+  email: String
+  phone: String
+  website: String
+  country: String
 }

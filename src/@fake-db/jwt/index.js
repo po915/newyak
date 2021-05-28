@@ -61,7 +61,7 @@ mock.onPost("/jwt/register").reply((request) => {
 				name: username,
 			},
 		}).then((res) => {
-			console.log(res, "1")
+			console.log(res, "SignUp Result")
 			const accessToken = jwt.sign({ id: res.userSub }, jwtConfig.secret, { expiresIn: jwtConfig.expireTime })
 			const refreshToken = jwt.sign({ id: res.userSub }, jwtConfig.refreshTokenSecret, {
 				expiresIn: jwtConfig.refreshTokenExpireTime,
@@ -75,6 +75,8 @@ mock.onPost("/jwt/register").reply((request) => {
 			res.role = "admin"
 			const userData = { ...res }
 			const response = {
+				username,
+				password,
 				userData,
 				accessToken,
 				refreshToken,
