@@ -1,0 +1,57 @@
+type Userinfo @model 
+@searchable 
+{
+  id: ID!
+  name: String
+  gender: String
+  dob: String
+  bio: String
+  avatar: String
+  email: String
+  phone: String
+  website: String
+  country: String
+  createdAt: AWSDateTime!
+}
+
+# ##########################   Article ##################
+type Article @model 
+@searchable
+@key(name: "articleByOwner", fields: ["ownerID", "createdAt"], queryField: "articleByOwner")
+@key(name: "articleByStatus", fields: ["status", "createdAt"], queryField: "articleByStatus")
+{
+  id: ID!
+  title: String!
+  content: String!
+  coverImg: String
+  likes: Int
+  dislikes: Int
+  status: String!
+  ownerID: ID!
+  owner: Userinfo @connection(fields: ["ownerID"])
+  comments: [Comment] @connection(keyName: "commentByArticle", fields: ["id"])
+  createdAt: AWSDateTime!
+}
+
+type Comment @model 
+@key(name: "commentByArticle", fields: ["articleID", "createdAt"], queryField: "commentByArticle") 
+{
+  id: ID!
+  content: String!
+  ownerID: ID!
+  owner: Userinfo @connection(fields: ["ownerID"])
+  articleID: ID!
+  replys: [Reply] @connection(keyName: "replyByPost", fields: ["id"])
+  createdAt: AWSDateTime!
+}
+
+type Reply @model 
+@key(name: "replyByPost", fields: ["commentID", "createdAt"], queryField: "replyByPost") 
+{
+  id: ID!
+  content: String!
+  ownerID: ID!
+  owner: Userinfo @connection(fields: ["ownerID"])
+  commentID: ID!
+  createdAt: AWSDateTime!
+}

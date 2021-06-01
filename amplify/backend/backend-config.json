@@ -8,13 +8,13 @@
     }
   },
   "storage": {
-    "s399de29e2": {
+    "s3d428ee61": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
     }
   },
   "api": {
-    "yak": {
+    "yakyak": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -23,7 +23,7 @@
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 365,
-              "description": "yakapikey"
+              "description": ""
             }
           },
           "additionalAuthenticationProviders": []

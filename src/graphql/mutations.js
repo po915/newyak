@@ -1,264 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createBlog = /* GraphQL */ `
-  mutation CreateBlog(
-    $input: CreateBlogInput!
-    $condition: ModelBlogConditionInput
-  ) {
-    createBlog(input: $input, condition: $condition) {
-      id
-      name
-      posts {
-        items {
-          id
-          title
-          blogID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateBlog = /* GraphQL */ `
-  mutation UpdateBlog(
-    $input: UpdateBlogInput!
-    $condition: ModelBlogConditionInput
-  ) {
-    updateBlog(input: $input, condition: $condition) {
-      id
-      name
-      posts {
-        items {
-          id
-          title
-          blogID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteBlog = /* GraphQL */ `
-  mutation DeleteBlog(
-    $input: DeleteBlogInput!
-    $condition: ModelBlogConditionInput
-  ) {
-    deleteBlog(input: $input, condition: $condition) {
-      id
-      name
-      posts {
-        items {
-          id
-          title
-          blogID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createPost = /* GraphQL */ `
-  mutation CreatePost(
-    $input: CreatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    createPost(input: $input, condition: $condition) {
-      id
-      title
-      blogID
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          postID
-          content
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePost = /* GraphQL */ `
-  mutation UpdatePost(
-    $input: UpdatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    updatePost(input: $input, condition: $condition) {
-      id
-      title
-      blogID
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          postID
-          content
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePost = /* GraphQL */ `
-  mutation DeletePost(
-    $input: DeletePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    deletePost(input: $input, condition: $condition) {
-      id
-      title
-      blogID
-      blog {
-        id
-        name
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      comments {
-        items {
-          id
-          postID
-          content
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createComment = /* GraphQL */ `
-  mutation CreateComment(
-    $input: CreateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    createComment(input: $input, condition: $condition) {
-      id
-      postID
-      post {
-        id
-        title
-        blogID
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      content
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateComment = /* GraphQL */ `
-  mutation UpdateComment(
-    $input: UpdateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    updateComment(input: $input, condition: $condition) {
-      id
-      postID
-      post {
-        id
-        title
-        blogID
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      content
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteComment = /* GraphQL */ `
-  mutation DeleteComment(
-    $input: DeleteCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    deleteComment(input: $input, condition: $condition) {
-      id
-      postID
-      post {
-        id
-        title
-        blogID
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      content
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createUserinfo = /* GraphQL */ `
   mutation CreateUserinfo(
     $input: CreateUserinfoInput!
@@ -266,7 +8,6 @@ export const createUserinfo = /* GraphQL */ `
   ) {
     createUserinfo(input: $input, condition: $condition) {
       id
-      userID
       name
       gender
       dob
@@ -288,7 +29,6 @@ export const updateUserinfo = /* GraphQL */ `
   ) {
     updateUserinfo(input: $input, condition: $condition) {
       id
-      userID
       name
       gender
       dob
@@ -310,7 +50,6 @@ export const deleteUserinfo = /* GraphQL */ `
   ) {
     deleteUserinfo(input: $input, condition: $condition) {
       id
-      userID
       name
       gender
       dob
@@ -320,6 +59,345 @@ export const deleteUserinfo = /* GraphQL */ `
       phone
       website
       country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createArticle = /* GraphQL */ `
+  mutation CreateArticle(
+    $input: CreateArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    createArticle(input: $input, condition: $condition) {
+      id
+      title
+      content
+      coverImg
+      likes
+      dislikes
+      status
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      comments {
+        items {
+          id
+          content
+          ownerID
+          articleID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateArticle = /* GraphQL */ `
+  mutation UpdateArticle(
+    $input: UpdateArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    updateArticle(input: $input, condition: $condition) {
+      id
+      title
+      content
+      coverImg
+      likes
+      dislikes
+      status
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      comments {
+        items {
+          id
+          content
+          ownerID
+          articleID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteArticle = /* GraphQL */ `
+  mutation DeleteArticle(
+    $input: DeleteArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    deleteArticle(input: $input, condition: $condition) {
+      id
+      title
+      content
+      coverImg
+      likes
+      dislikes
+      status
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      comments {
+        items {
+          id
+          content
+          ownerID
+          articleID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createComment = /* GraphQL */ `
+  mutation CreateComment(
+    $input: CreateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    createComment(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      articleID
+      replys {
+        items {
+          id
+          content
+          ownerID
+          commentID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateComment = /* GraphQL */ `
+  mutation UpdateComment(
+    $input: UpdateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    updateComment(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      articleID
+      replys {
+        items {
+          id
+          content
+          ownerID
+          commentID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteComment = /* GraphQL */ `
+  mutation DeleteComment(
+    $input: DeleteCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    deleteComment(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      articleID
+      replys {
+        items {
+          id
+          content
+          ownerID
+          commentID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createReply = /* GraphQL */ `
+  mutation CreateReply(
+    $input: CreateReplyInput!
+    $condition: ModelReplyConditionInput
+  ) {
+    createReply(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      commentID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateReply = /* GraphQL */ `
+  mutation UpdateReply(
+    $input: UpdateReplyInput!
+    $condition: ModelReplyConditionInput
+  ) {
+    updateReply(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      commentID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteReply = /* GraphQL */ `
+  mutation DeleteReply(
+    $input: DeleteReplyInput!
+    $condition: ModelReplyConditionInput
+  ) {
+    deleteReply(input: $input, condition: $condition) {
+      id
+      content
+      ownerID
+      owner {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      commentID
       createdAt
       updatedAt
     }

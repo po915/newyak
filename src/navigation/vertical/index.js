@@ -2,35 +2,42 @@ import { Home, MessageSquare, FileText, Circle, User } from 'react-feather'
 export default [
   {
     id: 'Home',
-    title: 'Dashboards',
+    title: 'Home',
     icon: <Home size={20} />,
-    navLink: '/dashboard'
+    navLink: '/main'
   },
   {
     id: 'blog',
-    title: 'Post',
+    title: 'Article',
     icon: <FileText size={12} />,
     children: [
       {
-        id: 'blogList',
-        title: 'List',
+        id: 'allArticle',
+        title: 'All articles',
         icon: <Circle size={12} />,
         permissions: ['admin', 'editor'],
-        navLink: '/pages/blog/list'
+        navLink: '/blog/all'
       },
       {
-        id: 'blogDetail',
-        title: 'Detail',
+        id: 'ownArticle',
+        title: 'Your articles',
         icon: <Circle size={12} />,
         permissions: ['admin', 'editor'],
-        navLink: '/pages/blog/detail'
+        navLink: '/blog/list'
+      },
+      {
+        id: 'ownDraft',
+        title: 'Your drafts',
+        icon: <Circle size={12} />,
+        permissions: ['admin', 'editor'],
+        navLink: '/blog/draft'
       },
       {
         id: 'blogEdit',
-        title: 'Edit',
+        title: 'New Article',
         icon: <Circle size={12} />,
         permissions: ['admin', 'editor'],
-        navLink: '/pages/blog/edit'
+        navLink: '/blog/new'
       }
     ]
   },
@@ -38,6 +45,6 @@ export default [
     id: 'chat',
     title: 'Chat',
     icon: <MessageSquare size={20} />,
-    navLink: '/apps/chat'
+    navLink: '/chat'
   }
 ]

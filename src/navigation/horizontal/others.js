@@ -58,7 +58,7 @@ export default [
         icon: <Folder />,
         externalLink: true,
         newTab: true,
-        navLink: 'https://pixinvent.com/demo/Yakkaz-react-admin-dashboard-template/documentation'
+        navLink: 'https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/documentation'
       },
       {
         id: 'raiseSupport',
