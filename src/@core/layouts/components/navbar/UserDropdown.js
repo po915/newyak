@@ -22,17 +22,17 @@ const UserDropdown = () => {
 	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 	// ** State
 	const [userData, setUserData] = useState(null)
-	const [avatar, setAvatar] = useState()
+	const [avatar, setAvatar] = useState(null)
 	const userInfo = useSelector((state) => state.userinfo.userInfo)
 
 	//** ComponentDidMount
+	
 	useEffect(() => {
-		if (isUserLoggedIn() !== null) {
-			setUserData(JSON.parse(localStorage.getItem("userData")))
-		}
-		if (userInfo.avatar) {
+		console.log(userInfo, "userInfo")
+		if (userInfo?.avatar) {
 			setAvatar(baseImageURL + userInfo.avatar)
 		}
+		console.log("avatar", avatar)
 	}, [])
 
 	return (

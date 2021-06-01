@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react"
 import Sidebar from "../BlogSidebar"
 import Avatar from "@components/avatar"
-import Amplify, { Auth, API, Storage, graphqlOperation } from "aws-amplify"
+import { API, graphqlOperation } from "aws-amplify"
 import * as queries from "@src/graphql/queries"
 import * as mutations from "@src/graphql/mutations"
 import { CornerUpLeft } from "react-feather"
@@ -22,10 +22,14 @@ import {
 } from "reactstrap"
 
 import "@styles/base/pages/page-blog.scss"
+import { useSelector } from "react-redux"
 
 const BlogDetails = (props) => {
+	const userInfo = useSelector((state) => state.userinfo.userInfo)
 	const [data, setData] = useState()
 	const [avatar, setAvatar] = useState()
+	const [comment, setComment] = useState()
+	const [showReply, setShowReply] = useState(false)
 	const id = props.match.params.id
 	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 
@@ -36,6 +40,33 @@ const BlogDetails = (props) => {
 			setAvatar(baseImageURL + article.data.getArticle.owner.avatar)
 		}
 	}, [])
+
+	// console.log("ArticleData", data)
+
+	const postComment = () => {
+		const comment_data = {
+			content: comment,
+			ownerID: userInfo.id,
+			articleID: data.id,
+		}
+		API.graphql(graphqlOperation(mutations.createComment, { input: comment_data })).then((res) => {
+			console.log(res)
+		})
+		// API.graphql(graphqlOperation(queries.commentByArticle, { articleID: "6384a22e-f6a2-4c3e-9a12-76825e78d487" })).then(
+		// 	(res) => {
+		// 		console.log(res)
+		// 	}
+		// )
+	}
+
+	const replyShow = (e) => {
+		e.preventDefault()
+		setShowReply(true)
+	}
+
+	const replyHide = () => {
+		setShowReply(false)
+	}
 
 	const renderComments = (comments) => {
 		return comments.map((comment) => {
@@ -48,12 +79,36 @@ const BlogDetails = (props) => {
 								{/* <h6 className='font-weight-bolder mb-25'>{comment.owner.name}</h6>
 	              <CardText>{comment.createdAt}</CardText> */}
 								<CardText>{comment.content}</CardText>
-								<a href="/" onClick={(e) => e.preventDefault()}>
-									<div className="d-inline-flex align-items-center">
-										<CornerUpLeft size={18} className="mr-50" />
-										<span>Reply</span>
-									</div>
-								</a>
+								{showReply ? (
+									<Form className="form" onSubmit={(e) => e.preventDefault()}>
+										<Row>
+											<Col sm="12">
+												<FormGroup className="mb-2">
+													<Input
+														className="mb-2"
+														type="textarea"
+														rows="4"
+														placeholder="Reply..."
+														onChange={(e) => setComment(e.target.value)}
+													/>
+												</FormGroup>
+											</Col>
+											<Col sm="12">
+												<Button.Ripple color="primary">Reply</Button.Ripple>
+												<Button.Ripple color="primary" className="ml-2" outline onClick={replyHide}>
+													Dismiss
+												</Button.Ripple>
+											</Col>
+										</Row>
+									</Form>
+								) : (
+									<a href="/" onClick={(e) => replyShow(e)}>
+										<div className="d-inline-flex align-items-center">
+											<CornerUpLeft size={18} className="mr-50" />
+											<span>Reply</span>
+										</div>
+									</a>
+								)}
 							</Media>
 						</Media>
 					</CardBody>
@@ -75,7 +130,13 @@ const BlogDetails = (props) => {
 										<CardBody>
 											<CardTitle tag="h4">{data.title}</CardTitle>
 											<Media>
-												<Avatar className="mr-50" color="light-primary" img={avatar} content={data.owner.name} initials />
+												<Avatar
+													className="mr-50"
+													color="light-primary"
+													img={avatar}
+													content={data.owner.name}
+													initials
+												/>
 												<Media body>
 													<small className="text-muted mr-25">by</small>
 													<small>
@@ -95,7 +156,13 @@ const BlogDetails = (props) => {
 											></div>
 											<hr />
 											<Media>
-												<Avatar className="mr-50" color="light-primary" img={avatar} content={data.owner.name} initials />
+												<Avatar
+													className="mr-50"
+													color="light-primary"
+													img={avatar}
+													content={data.owner.name}
+													initials
+												/>
 												<Media body>
 													<h6 className="font-weight-bolder">{data.owner.name}</h6>
 													<CardText className="mb-0">{data.owner.bio}</CardText>
@@ -119,11 +186,19 @@ const BlogDetails = (props) => {
 												<Row>
 													<Col sm="12">
 														<FormGroup className="mb-2">
-															<Input className="mb-2" type="textarea" rows="4" placeholder="Comment" />
+															<Input
+																className="mb-2"
+																type="textarea"
+																rows="4"
+																placeholder="Comment"
+																onChange={(e) => setComment(e.target.value)}
+															/>
 														</FormGroup>
 													</Col>
 													<Col sm="12">
-														<Button.Ripple color="primary">Post Comment</Button.Ripple>
+														<Button.Ripple color="primary" onClick={postComment}>
+															Post Comment
+														</Button.Ripple>
 													</Col>
 												</Row>
 											</Form>

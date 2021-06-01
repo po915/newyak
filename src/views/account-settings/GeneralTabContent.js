@@ -1,15 +1,13 @@
 import { Fragment, useState, useEffect } from "react"
 import { Button, Media, Label, Row, Col, Input, FormGroup, Alert, Form } from "reactstrap"
 import { v4 as uuid } from "uuid"
-import Select from "react-select"
 import Amplify, { Auth, API, Storage, graphqlOperation } from "aws-amplify"
 import S3FileUpload from "react-s3"
 import { toast, Slide } from "react-toastify"
 import defaultAvatar from "@src/assets/images/avatars/default.png"
 import * as mutations from "@src/graphql/mutations"
-import * as queries from "@src/graphql/queries"
 import { useDispatch, useSelector } from "react-redux"
-import { setUserInfo, setCurrentUser } from "@src/redux/actions/userinfo"
+import { setUserInfo } from "@src/redux/actions/userinfo"
 import { useHistory } from "react-router-dom"
 
 const ToastContent = ({ title, message }) => (
@@ -72,18 +70,14 @@ const GeneralTabs = ({ data }) => {
 			website: website,
 			country: country,
 		}
-		await API.graphql(graphqlOperation(mutations.updateUserinfo, { input: input })).then(
-			(res) => {
-				dispatch(setUserInfo(res.data.updateUserinfo))
-				toast.success(
-					<ToastContent
-						title="SUCCESS!"
-						message="Your personal information is updated successfully."
-					/>,
-					{ transition: Slide, hideProgressBar: true, autoClose: 2000 }
-				)
-			}
-		)
+		await API.graphql(graphqlOperation(mutations.updateUserinfo, { input: input })).then((res) => {
+			dispatch(setUserInfo(res.data.updateUserinfo))
+			toast.success(<ToastContent title="SUCCESS!" message="Your personal information is updated successfully." />, {
+				transition: Slide,
+				hideProgressBar: true,
+				autoClose: 2000,
+			})
+		})
 	}
 
 	const uploadAvatar = async (e) => {
@@ -99,15 +93,13 @@ const GeneralTabs = ({ data }) => {
 				setAvatar(baseImageURL + finalName)
 				//Register new avatar
 				const input = {
-					id: currentUser.attributes.nickname,
+					id: userInfo.id,
 					avatar: finalName,
 				}
-				await API.graphql(
-					graphqlOperation(mutations.updateUserinfo, { input: input })
-				).then((res) => {
+				await API.graphql(graphqlOperation(mutations.updateUserinfo, { input: input })).then((res) => {
 					dispatch(setUserInfo(res.data.updateUserinfo))
 					console.log(res, "Avatar update result")
-					toast.success(<ToastContent />, {
+					toast.success(<ToastContent title="SUCCESS!" message="Your Avatar is changed successfully!" />, {
 						transition: Slide,
 						hideProgressBar: true,
 						autoClose: 2000,
@@ -133,12 +125,7 @@ const GeneralTabs = ({ data }) => {
 				<Media className="my-auto ml-1" body>
 					<Button.Ripple tag={Label} className="mr-75" size="sm" color="primary">
 						Upload
-						<Input
-							type="file"
-							onChange={(e) => uploadAvatar(e)}
-							accept="image/*"
-							hidden
-						/>
+						<Input type="file" onChange={(e) => uploadAvatar(e)} accept="image/*" hidden />
 					</Button.Ripple>
 				</Media>
 			</Media>
@@ -186,12 +173,7 @@ const GeneralTabs = ({ data }) => {
 					<Col sm="6">
 						<FormGroup>
 							<Label for="birth-date">Birth Date</Label>
-							<Input
-								type="date"
-								defaultValue={userInfo.dob}
-								placeholder=""
-								onChange={(e) => setDob(e.target.value)}
-							/>
+							<Input type="date" defaultValue={userInfo.dob} placeholder="" onChange={(e) => setDob(e.target.value)} />
 						</FormGroup>
 					</Col>
 					<Col sm="6">

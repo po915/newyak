@@ -51,10 +51,6 @@ const Routes = [
 		},
 	},
 	{
-		path: "/profile",
-		component: lazy(() => import("../../views/profile")),
-	},
-	{
 		path: "/account-settings",
 		component: lazy(() => import("../../views/account-settings")),
 	},
