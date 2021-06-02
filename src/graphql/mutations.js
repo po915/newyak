@@ -13,6 +13,7 @@ export const createUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
@@ -34,6 +35,7 @@ export const updateUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
@@ -55,10 +57,152 @@ export const deleteUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
       country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFriend = /* GraphQL */ `
+  mutation CreateFriend(
+    $input: CreateFriendInput!
+    $condition: ModelFriendConditionInput
+  ) {
+    createFriend(input: $input, condition: $condition) {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFriend = /* GraphQL */ `
+  mutation UpdateFriend(
+    $input: UpdateFriendInput!
+    $condition: ModelFriendConditionInput
+  ) {
+    updateFriend(input: $input, condition: $condition) {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFriend = /* GraphQL */ `
+  mutation DeleteFriend(
+    $input: DeleteFriendInput!
+    $condition: ModelFriendConditionInput
+  ) {
+    deleteFriend(input: $input, condition: $condition) {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createItem = /* GraphQL */ `
+  mutation CreateItem(
+    $input: CreateItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    createItem(input: $input, condition: $condition) {
+      id
+      ownerID
+      title
+      description
+      content
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateItem = /* GraphQL */ `
+  mutation UpdateItem(
+    $input: UpdateItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    updateItem(input: $input, condition: $condition) {
+      id
+      ownerID
+      title
+      description
+      content
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteItem = /* GraphQL */ `
+  mutation DeleteItem(
+    $input: DeleteItemInput!
+    $condition: ModelItemConditionInput
+  ) {
+    deleteItem(input: $input, condition: $condition) {
+      id
+      ownerID
+      title
+      description
+      content
+      status
       createdAt
       updatedAt
     }
@@ -85,6 +229,7 @@ export const createArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -129,6 +274,7 @@ export const updateArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -173,6 +319,7 @@ export const deleteArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -212,6 +359,7 @@ export const createComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -252,6 +400,7 @@ export const updateComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -292,6 +441,7 @@ export const deleteComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -332,6 +482,7 @@ export const createReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -361,6 +512,7 @@ export const updateReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -390,6 +542,7 @@ export const deleteReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website

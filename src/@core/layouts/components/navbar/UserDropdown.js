@@ -28,11 +28,9 @@ const UserDropdown = () => {
 	//** ComponentDidMount
 	
 	useEffect(() => {
-		console.log(userInfo, "userInfo")
 		if (userInfo?.avatar) {
 			setAvatar(baseImageURL + userInfo.avatar)
 		}
-		console.log("avatar", avatar)
 	}, [])
 
 	return (

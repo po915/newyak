@@ -13,6 +13,16 @@ const Routes = [
 		exact: true,
 	},
 	{
+		path: "/profile",
+		component: lazy(() => import("../../views/profile")),
+		exact: true,
+	},
+	{
+		path: "/media",
+		component: lazy(() => import("../../views/media")),
+		exact: true,
+	},
+	{
 		path: "/chat",
 		appLayout: true,
 		className: "chat-application",
@@ -73,9 +83,6 @@ const Routes = [
 		path: "/blog/detail/:id",
 		exact: true,
 		component: lazy(() => import("../../views/blog/details")),
-		meta: {
-			navLink: "/blog/detail",
-		},
 	},
 	{
 		path: "/blog/edit/:id",

@@ -6,3 +6,12 @@ export const customAction = data => {
         })
     }
 }
+
+export const setActiveTab = data => {
+    return dispatch => {
+        dispatch({
+            type: 'SET_ACTIVE_TAB',
+            data
+        })
+    }
+}

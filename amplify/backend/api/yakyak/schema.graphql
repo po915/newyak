@@ -7,11 +7,35 @@ type Userinfo @model
   dob: String
   bio: String
   avatar: String
+  banner: String
   email: String
   phone: String
   website: String
   country: String
   createdAt: AWSDateTime!
+}
+
+type Friend @model
+@key(name: "friendByUser", fields: ["selfID", "createdAt"], queryField: "friendByUser")
+{
+  id: ID!
+  selfID: ID!
+  friendID: ID!
+  friend: Userinfo @connection(fields: ["friendID"])
+  status: String!
+  createdAt: AWSDateTime!
+}
+
+type Item @model
+@key(name: "itemByUser", fields: ["ownerID", "createdAt"], queryField: "itemByUser")
+{
+  id: ID!
+  ownerID: ID!
+  title: String!
+  description: String!
+  content: String!
+  status: String!
+  createdAt: AWSDateTime
 }
 
 # ##########################   Article ##################
@@ -41,12 +65,12 @@ type Comment @model
   ownerID: ID!
   owner: Userinfo @connection(fields: ["ownerID"])
   articleID: ID!
-  replys: [Reply] @connection(keyName: "replyByPost", fields: ["id"])
+  replys: [Reply] @connection(keyName: "replyByComment", fields: ["id"])
   createdAt: AWSDateTime!
 }
 
 type Reply @model 
-@key(name: "replyByPost", fields: ["commentID", "createdAt"], queryField: "replyByPost") 
+@key(name: "replyByComment", fields: ["commentID", "createdAt"], queryField: "replyByComment") 
 {
   id: ID!
   content: String!

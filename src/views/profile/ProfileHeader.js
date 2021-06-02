@@ -3,31 +3,19 @@ import { AlignJustify, Rss, Info, Image, Users, Edit } from "react-feather"
 import { Card, CardImg, Collapse, Navbar, Nav, NavItem, NavLink, Button } from "reactstrap"
 import defaultAvatar from "@src/assets/images/avatars/default.png"
 import defaultBanner from "@src/assets/images/banner/banner-15.jpg"
-import { useHistory } from "react-router-dom"
-import classnames from "classnames"
-import { useDispatch } from "react-redux"
 
 const ProfileHeader = ({ data }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
-	const [activeTab, setActiveTab] = useState("feed")
-	const history = useHistory()
-	const dispatch = useDispatch()
 
-
-	const toggle = (tab) => {
-		if (activeTab !== tab) {
-			setActiveTab(tab)
-			dispatch(setActiveTab(tab))
-		}
-	}
+	const toggle = () => setIsOpen(!isOpen)
 
 	return (
 		<Card className="profile-header mb-2">
 			{data.banner ? (
 				<CardImg src={data.banner} alt="User Profile Image" top />
 			) : (
-				<CardImg src="https://picsum.photos/900/200" alt="User Profile Image" top />
+				<CardImg src={defaultBanner} alt="User Profile Image" top />
 			)}
 
 			<div className="position-relative">
@@ -49,23 +37,23 @@ const ProfileHeader = ({ data }) => {
 					<Button color="" className="btn-icon navbar-toggler" onClick={toggle}>
 						<AlignJustify size={21} />
 					</Button>
-					<Collapse navbar>
+					<Collapse isOpen={isOpen} navbar>
 						<div className="profile-tabs d-flex justify-content-between flex-wrap mt-1 mt-md-0">
 							<Nav className="mb-0" pills>
 								<NavItem>
-									<NavLink className="font-weight-bold" className={classnames({ active: activeTab === "feed" })}>
+									<NavLink className="font-weight-bold" active>
 										<span className="d-none d-md-block">Feeds</span>
 										<Rss className="d-block d-md-none" size={14} />
 									</NavLink>
 								</NavItem>
 								<NavItem>
-									<NavLink className="font-weight-bold" className={classnames({ active: activeTab === "media" })}>
-										<span className="d-none d-md-block">Media</span>
+									<NavLink className="font-weight-bold">
+										<span className="d-none d-md-block">Medias</span>
 										<Image className="d-block d-md-none" size={14} />
 									</NavLink>
 								</NavItem>
 								<NavItem>
-									<NavLink className="font-weight-bold" className={classnames({ active: activeTab === "friend" })}>
+									<NavLink className="font-weight-bold">
 										<span className="d-none d-md-block">Friends</span>
 										<Users className="d-block d-md-none" size={14} />
 									</NavLink>

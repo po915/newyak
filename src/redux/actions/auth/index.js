@@ -1,5 +1,6 @@
 import useJwt from '@src/auth/jwt/useJwt'
 
+import { Auth } from "aws-amplify"
 const config = useJwt.jwtConfig
 
 export const handleLogin = data => {
@@ -24,6 +25,7 @@ export const handleLogout = () => {
   return dispatch => {
     dispatch({ type: 'LOGOUT', [config.storageTokenKeyName]: null, [config.storageRefreshTokenKeyName]: null })
 
+    Auth.signOut()
     // ** Remove user, accessToken & refreshToken from localStorage
     localStorage.removeItem('sUser')
     localStorage.removeItem('cUser')

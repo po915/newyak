@@ -10,6 +10,7 @@ export const onCreateUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
@@ -28,6 +29,7 @@ export const onUpdateUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
@@ -46,10 +48,134 @@ export const onDeleteUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
       country
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFriend = /* GraphQL */ `
+  subscription OnCreateFriend {
+    onCreateFriend {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFriend = /* GraphQL */ `
+  subscription OnUpdateFriend {
+    onUpdateFriend {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFriend = /* GraphQL */ `
+  subscription OnDeleteFriend {
+    onDeleteFriend {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateItem = /* GraphQL */ `
+  subscription OnCreateItem {
+    onCreateItem {
+      id
+      ownerID
+      title
+      description
+      content
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateItem = /* GraphQL */ `
+  subscription OnUpdateItem {
+    onUpdateItem {
+      id
+      ownerID
+      title
+      description
+      content
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteItem = /* GraphQL */ `
+  subscription OnDeleteItem {
+    onDeleteItem {
+      id
+      ownerID
+      title
+      description
+      content
+      status
       createdAt
       updatedAt
     }
@@ -73,6 +199,7 @@ export const onCreateArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -114,6 +241,7 @@ export const onUpdateArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -155,6 +283,7 @@ export const onDeleteArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -191,6 +320,7 @@ export const onCreateComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -228,6 +358,7 @@ export const onUpdateComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -265,6 +396,7 @@ export const onDeleteComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -302,6 +434,7 @@ export const onCreateReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -328,6 +461,7 @@ export const onUpdateReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -354,6 +488,7 @@ export const onDeleteReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website

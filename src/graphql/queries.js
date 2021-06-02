@@ -10,6 +10,7 @@ export const getUserinfo = /* GraphQL */ `
       dob
       bio
       avatar
+      banner
       email
       phone
       website
@@ -33,10 +34,107 @@ export const listUserinfos = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
         country
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFriend = /* GraphQL */ `
+  query GetFriend($id: ID!) {
+    getFriend(id: $id) {
+      id
+      selfID
+      friendID
+      friend {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFriends = /* GraphQL */ `
+  query ListFriends(
+    $filter: ModelFriendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFriends(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        selfID
+        friendID
+        friend {
+          id
+          name
+          gender
+          dob
+          bio
+          avatar
+          banner
+          email
+          phone
+          website
+          country
+          createdAt
+          updatedAt
+        }
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getItem = /* GraphQL */ `
+  query GetItem($id: ID!) {
+    getItem(id: $id) {
+      id
+      ownerID
+      title
+      description
+      content
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listItems = /* GraphQL */ `
+  query ListItems(
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        ownerID
+        title
+        description
+        content
+        status
         createdAt
         updatedAt
       }
@@ -62,6 +160,7 @@ export const getArticle = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -108,6 +207,7 @@ export const listArticles = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -138,6 +238,7 @@ export const getComment = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -180,6 +281,7 @@ export const listComments = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -211,6 +313,7 @@ export const getReply = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -242,6 +345,7 @@ export const listReplys = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -250,6 +354,81 @@ export const listReplys = /* GraphQL */ `
           updatedAt
         }
         commentID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const friendByUser = /* GraphQL */ `
+  query FriendByUser(
+    $selfID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelFriendFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    friendByUser(
+      selfID: $selfID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        selfID
+        friendID
+        friend {
+          id
+          name
+          gender
+          dob
+          bio
+          avatar
+          banner
+          email
+          phone
+          website
+          country
+          createdAt
+          updatedAt
+        }
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const itemByUser = /* GraphQL */ `
+  query ItemByUser(
+    $ownerID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    itemByUser(
+      ownerID: $ownerID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        ownerID
+        title
+        description
+        content
+        status
         createdAt
         updatedAt
       }
@@ -290,6 +469,7 @@ export const articleByOwner = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -340,6 +520,7 @@ export const articleByStatus = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -385,6 +566,7 @@ export const commentByArticle = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -403,8 +585,8 @@ export const commentByArticle = /* GraphQL */ `
     }
   }
 `;
-export const replyByPost = /* GraphQL */ `
-  query ReplyByPost(
+export const replyByComment = /* GraphQL */ `
+  query ReplyByComment(
     $commentID: ID
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -412,7 +594,7 @@ export const replyByPost = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    replyByPost(
+    replyByComment(
       commentID: $commentID
       createdAt: $createdAt
       sortDirection: $sortDirection
@@ -431,6 +613,7 @@ export const replyByPost = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
@@ -468,6 +651,7 @@ export const searchUserinfos = /* GraphQL */ `
         dob
         bio
         avatar
+        banner
         email
         phone
         website
@@ -511,6 +695,7 @@ export const searchArticles = /* GraphQL */ `
           dob
           bio
           avatar
+          banner
           email
           phone
           website
