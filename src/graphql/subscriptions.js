@@ -139,43 +139,109 @@ export const onDeleteFriend = /* GraphQL */ `
     }
   }
 `;
-export const onCreateItem = /* GraphQL */ `
-  subscription OnCreateItem {
-    onCreateItem {
+export const onCreateMediaGroup = /* GraphQL */ `
+  subscription OnCreateMediaGroup {
+    onCreateMediaGroup {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateItem = /* GraphQL */ `
-  subscription OnUpdateItem {
-    onUpdateItem {
+export const onUpdateMediaGroup = /* GraphQL */ `
+  subscription OnUpdateMediaGroup {
+    onUpdateMediaGroup {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteItem = /* GraphQL */ `
-  subscription OnDeleteItem {
-    onDeleteItem {
+export const onDeleteMediaGroup = /* GraphQL */ `
+  subscription OnDeleteMediaGroup {
+    onDeleteMediaGroup {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateMedia = /* GraphQL */ `
+  subscription OnCreateMedia {
+    onCreateMedia {
+      id
+      groupID
+      type
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMedia = /* GraphQL */ `
+  subscription OnUpdateMedia {
+    onUpdateMedia {
+      id
+      groupID
+      type
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMedia = /* GraphQL */ `
+  subscription OnDeleteMedia {
+    onDeleteMedia {
+      id
+      groupID
+      type
+      path
       createdAt
       updatedAt
     }

@@ -3,10 +3,8 @@ import Tabs from './Tabs'
 import axios from 'axios'
 import GeneralTabContent from './GeneralTabContent'
 import PasswordTabContent from './PasswordTabContent'
-import EmailTabContent from './EmailTabContent'
 import { Row, Col, TabContent, TabPane, Card, CardBody } from 'reactstrap'
 
-import '@styles/react/libs/flatpickr/flatpickr.scss'
 import '@styles/react/pages/page-account-settings.scss'
 
 const AccountSettings = () => {

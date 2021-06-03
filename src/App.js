@@ -7,8 +7,6 @@ const App = (props) => {
 	const dispatch = useDispatch()
 
 	const sUser = JSON.parse(localStorage.getItem("sUser"))
-	const cUser = JSON.parse(localStorage.getItem("cUser"))
-	dispatch(setCurrentUser(cUser))
 	dispatch(setUserInfo(sUser))
 
 	return <Router />

@@ -4,7 +4,7 @@ import classnames from "classnames"
 import UILoader from "@components/ui-loader"
 import ProfileAbout from "./ProfileAbout"
 import ProfilePosts from "./ProfilePosts"
-import Medias from "./Medias"
+import Media from "./Media"
 import {
 	Row,
 	Col,
@@ -173,7 +173,7 @@ const Profile = () => {
 							</Row>
 						</TabPane>
 						<TabPane tabId="2">
-							<Medias />
+							<Media />
 						</TabPane>
 						<TabPane tabId="3">
 							Friends

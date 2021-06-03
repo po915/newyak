@@ -1,9 +1,4 @@
-import * as yup from "yup"
-import classnames from "classnames"
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { Input, Label, Form, FormGroup, Row, Col, Button } from "reactstrap"
-import InputPasswordToggle from "@components/input-password-toggle"
 
 const EmailTabContent = () => {
 

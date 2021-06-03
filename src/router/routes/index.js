@@ -18,11 +18,6 @@ const Routes = [
 		exact: true,
 	},
 	{
-		path: "/media",
-		component: lazy(() => import("../../views/media")),
-		exact: true,
-	},
-	{
 		path: "/chat",
 		appLayout: true,
 		className: "chat-application",

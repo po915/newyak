@@ -157,52 +157,127 @@ export const deleteFriend = /* GraphQL */ `
     }
   }
 `;
-export const createItem = /* GraphQL */ `
-  mutation CreateItem(
-    $input: CreateItemInput!
-    $condition: ModelItemConditionInput
+export const createMediaGroup = /* GraphQL */ `
+  mutation CreateMediaGroup(
+    $input: CreateMediaGroupInput!
+    $condition: ModelMediaGroupConditionInput
   ) {
-    createItem(input: $input, condition: $condition) {
+    createMediaGroup(input: $input, condition: $condition) {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const updateItem = /* GraphQL */ `
-  mutation UpdateItem(
-    $input: UpdateItemInput!
-    $condition: ModelItemConditionInput
+export const updateMediaGroup = /* GraphQL */ `
+  mutation UpdateMediaGroup(
+    $input: UpdateMediaGroupInput!
+    $condition: ModelMediaGroupConditionInput
   ) {
-    updateItem(input: $input, condition: $condition) {
+    updateMediaGroup(input: $input, condition: $condition) {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteItem = /* GraphQL */ `
-  mutation DeleteItem(
-    $input: DeleteItemInput!
-    $condition: ModelItemConditionInput
+export const deleteMediaGroup = /* GraphQL */ `
+  mutation DeleteMediaGroup(
+    $input: DeleteMediaGroupInput!
+    $condition: ModelMediaGroupConditionInput
   ) {
-    deleteItem(input: $input, condition: $condition) {
+    deleteMediaGroup(input: $input, condition: $condition) {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createMedia = /* GraphQL */ `
+  mutation CreateMedia(
+    $input: CreateMediaInput!
+    $condition: ModelMediaConditionInput
+  ) {
+    createMedia(input: $input, condition: $condition) {
+      id
+      groupID
+      type
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateMedia = /* GraphQL */ `
+  mutation UpdateMedia(
+    $input: UpdateMediaInput!
+    $condition: ModelMediaConditionInput
+  ) {
+    updateMedia(input: $input, condition: $condition) {
+      id
+      groupID
+      type
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteMedia = /* GraphQL */ `
+  mutation DeleteMedia(
+    $input: DeleteMediaInput!
+    $condition: ModelMediaConditionInput
+  ) {
+    deleteMedia(input: $input, condition: $condition) {
+      id
+      groupID
+      type
+      path
       createdAt
       updatedAt
     }

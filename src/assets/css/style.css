@@ -62,12 +62,39 @@
 	border-radius: 5px;
 }
 
-.upload-card img {
+.file-preview {
+	text-align: center;
+}
+
+.fileUploadModal img {
 	width: 100px;
 	height: 100px;
-	object-fit: contain;
+	border-radius: 15px;
+	object-fit: cover;
+	margin: 5px !important;
 }
 
 .uppy-DragDrop-inner {
 	padding: 10px 20px !important;
+}
+
+.uppy-DragDrop-arrow {
+	display: none !important;
+}
+
+.card-1 {
+	width: 100%;
+}
+
+.groupTitle {
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.imgItem{
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+	margin: 10px;
+	border-radius: 5px;
 }

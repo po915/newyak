@@ -1,11 +1,9 @@
 import { Fragment, useState, useEffect } from "react"
 import { API, graphqlOperation } from "aws-amplify"
 import * as queries from "@src/graphql/queries"
-import * as mutations from "@src/graphql/mutations"
 import Sidebar from "../BlogSidebar"
 import Avatar from "@components/avatar"
 import { Link } from "react-router-dom"
-import { MessageSquare } from "react-feather"
 import {
 	Row,
 	Col,

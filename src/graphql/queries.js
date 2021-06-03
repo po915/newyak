@@ -107,34 +107,77 @@ export const listFriends = /* GraphQL */ `
     }
   }
 `;
-export const getItem = /* GraphQL */ `
-  query GetItem($id: ID!) {
-    getItem(id: $id) {
+export const getMediaGroup = /* GraphQL */ `
+  query GetMediaGroup($id: ID!) {
+    getMediaGroup(id: $id) {
       id
       ownerID
       title
-      description
-      content
+      memo
       status
+      medias {
+        items {
+          id
+          groupID
+          type
+          path
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const listItems = /* GraphQL */ `
-  query ListItems(
-    $filter: ModelItemFilterInput
+export const listMediaGroups = /* GraphQL */ `
+  query ListMediaGroups(
+    $filter: ModelMediaGroupFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMediaGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         ownerID
         title
-        description
-        content
+        memo
         status
+        medias {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMedia = /* GraphQL */ `
+  query GetMedia($id: ID!) {
+    getMedia(id: $id) {
+      id
+      groupID
+      type
+      path
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listMedias = /* GraphQL */ `
+  query ListMedias(
+    $filter: ModelMediaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMedias(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        groupID
+        type
+        path
         createdAt
         updatedAt
       }
@@ -405,16 +448,16 @@ export const friendByUser = /* GraphQL */ `
     }
   }
 `;
-export const itemByUser = /* GraphQL */ `
-  query ItemByUser(
+export const mediaGroupByOwner = /* GraphQL */ `
+  query MediaGroupByOwner(
     $ownerID: ID
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
-    $filter: ModelItemFilterInput
+    $filter: ModelMediaGroupFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    itemByUser(
+    mediaGroupByOwner(
       ownerID: $ownerID
       createdAt: $createdAt
       sortDirection: $sortDirection
@@ -426,9 +469,40 @@ export const itemByUser = /* GraphQL */ `
         id
         ownerID
         title
-        description
-        content
+        memo
         status
+        medias {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const mediaByGroup = /* GraphQL */ `
+  query MediaByGroup(
+    $groupID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMediaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    mediaByGroup(
+      groupID: $groupID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupID
+        type
+        path
         createdAt
         updatedAt
       }

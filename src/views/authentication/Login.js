@@ -51,7 +51,7 @@ const Login = (props) => {
 			useJwt
 				.login({ email, password })
 				.then(async (res) => {
-					
+
 					await Auth.currentAuthenticatedUser().then((cUser) => {
 						API.graphql(graphqlOperation(queries.getUserinfo, { id: cUser.attributes.nickname })).then((res) => {
 							dispatch(setUserInfo(res.data?.getUserinfo))

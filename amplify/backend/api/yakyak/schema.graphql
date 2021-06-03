@@ -1,6 +1,4 @@
-type Userinfo @model 
-@searchable 
-{
+type Userinfo @model @searchable {
   id: ID!
   name: String
   gender: String
@@ -15,9 +13,13 @@ type Userinfo @model
   createdAt: AWSDateTime!
 }
 
-type Friend @model
-@key(name: "friendByUser", fields: ["selfID", "createdAt"], queryField: "friendByUser")
-{
+type Friend
+  @model
+  @key(
+    name: "friendByUser"
+    fields: ["selfID", "createdAt"]
+    queryField: "friendByUser"
+  ) {
   id: ID!
   selfID: ID!
   friendID: ID!
@@ -26,24 +28,50 @@ type Friend @model
   createdAt: AWSDateTime!
 }
 
-type Item @model
-@key(name: "itemByUser", fields: ["ownerID", "createdAt"], queryField: "itemByUser")
-{
+type MediaGroup
+  @model
+  @key(
+    name: "mediaGroupByOwner"
+    fields: ["ownerID", "createdAt"]
+    queryField: "mediaGroupByOwner"
+  ) {
   id: ID!
   ownerID: ID!
   title: String!
-  description: String!
-  content: String!
+  memo: String!
   status: String!
+  medias: [Media] @connection(keyName: "mediaByGroup", fields: ["id"])
+  createdAt: AWSDateTime
+}
+
+type Media
+  @model
+  @key(
+    name: "mediaByGroup"
+    fields: ["groupID", "createdAt"]
+    queryField: "mediaByGroup"
+  ) {
+  id: ID!
+  groupID: ID!
+  type: String!
+  path: String!
   createdAt: AWSDateTime
 }
 
 # ##########################   Article ##################
-type Article @model 
-@searchable
-@key(name: "articleByOwner", fields: ["ownerID", "createdAt"], queryField: "articleByOwner")
-@key(name: "articleByStatus", fields: ["status", "createdAt"], queryField: "articleByStatus")
-{
+type Article
+  @model
+  @searchable
+  @key(
+    name: "articleByOwner"
+    fields: ["ownerID", "createdAt"]
+    queryField: "articleByOwner"
+  )
+  @key(
+    name: "articleByStatus"
+    fields: ["status", "createdAt"]
+    queryField: "articleByStatus"
+  ) {
   id: ID!
   title: String!
   content: String!
@@ -57,9 +85,13 @@ type Article @model
   createdAt: AWSDateTime!
 }
 
-type Comment @model 
-@key(name: "commentByArticle", fields: ["articleID", "createdAt"], queryField: "commentByArticle") 
-{
+type Comment
+  @model
+  @key(
+    name: "commentByArticle"
+    fields: ["articleID", "createdAt"]
+    queryField: "commentByArticle"
+  ) {
   id: ID!
   content: String!
   ownerID: ID!
@@ -69,9 +101,13 @@ type Comment @model
   createdAt: AWSDateTime!
 }
 
-type Reply @model 
-@key(name: "replyByComment", fields: ["commentID", "createdAt"], queryField: "replyByComment") 
-{
+type Reply
+  @model
+  @key(
+    name: "replyByComment"
+    fields: ["commentID", "createdAt"]
+    queryField: "replyByComment"
+  ) {
   id: ID!
   content: String!
   ownerID: ID!
