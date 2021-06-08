@@ -58,13 +58,13 @@ export const onDeleteUserinfo = /* GraphQL */ `
     }
   }
 `;
-export const onCreateFriend = /* GraphQL */ `
-  subscription OnCreateFriend {
-    onCreateFriend {
+export const onCreateContact = /* GraphQL */ `
+  subscription OnCreateContact {
+    onCreateContact {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -80,18 +80,20 @@ export const onCreateFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateFriend = /* GraphQL */ `
-  subscription OnUpdateFriend {
-    onUpdateFriend {
+export const onUpdateContact = /* GraphQL */ `
+  subscription OnUpdateContact {
+    onUpdateContact {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -107,18 +109,20 @@ export const onUpdateFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteFriend = /* GraphQL */ `
-  subscription OnDeleteFriend {
-    onDeleteFriend {
+export const onDeleteContact = /* GraphQL */ `
+  subscription OnDeleteContact {
+    onDeleteContact {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -134,6 +138,47 @@ export const onDeleteFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateChat = /* GraphQL */ `
+  subscription OnCreateChat {
+    onCreateChat {
+      id
+      contactID
+      message
+      time
+      senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateChat = /* GraphQL */ `
+  subscription OnUpdateChat {
+    onUpdateChat {
+      id
+      contactID
+      message
+      time
+      senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteChat = /* GraphQL */ `
+  subscription OnDeleteChat {
+    onDeleteChat {
+      id
+      contactID
+      message
+      time
+      senderID
       createdAt
       updatedAt
     }

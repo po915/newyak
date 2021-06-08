@@ -25,8 +25,13 @@ import { v4 as uuid } from "uuid"
 
 import { css } from "@emotion/react"
 import CircleLoader from "react-spinners/CircleLoader"
+import { Trash } from "react-feather"
+import LoadingOverlay from "react-loading-overlay"
 
 import ImgsViewer from "react-images-viewer"
+
+import Swal from "sweetalert2/dist/sweetalert2.js"
+import "sweetalert2/src/sweetalert2.scss"
 
 import "uppy/dist/uppy.css"
 import "@uppy/status-bar/dist/style.css"
@@ -42,6 +47,7 @@ const Media = () => {
   const [isPublic, setIsPublic] = useState(false)
   const [loaderClass, setLoaderClass] = useState("d-flex hidden")
   const [mediaGroups, setMediaGroups] = useState([])
+  const [uploading, setUploading] = useState(false)
   const S3config = {
     bucketName: "yakbucket104727-dev",
     dirName: "image",
@@ -96,6 +102,7 @@ const Media = () => {
 
   const mediaUpload = () => {
     setLoaderClass("d-flex show")
+    // setUploading(true)
     // uppy.cancelAll()
     var status = isPublic ? "public" : "private"
     const group = {
@@ -104,8 +111,6 @@ const Media = () => {
       memo: memo,
       status: status,
     }
-
-    console.log(fileObjects, "fileObjects")
     API.graphql(
       graphqlOperation(mutations.createMediaGroup, { input: group })
     ).then((res) => {
@@ -131,7 +136,9 @@ const Media = () => {
           ).then((res) => {
             console.log(res, "media register result")
             setLoaderClass("d-flex hidden")
+            setUploading(false)
             setFormModal(false)
+            getMediaGroups()
           })
         })
       })
@@ -139,21 +146,43 @@ const Media = () => {
   }
 
   useEffect(() => {
+    // API.graphql(
+    //   graphqlOperation(queries.mediaGroupByOwner, { ownerID: userInfo.id })
+    // ).then((res) => {
+    //   InsertMediasIntoGroup(res.data.mediaGroupByOwner.items)
+    //   setMediaGroups(res.data.mediaGroupByOwner.items)
+    // })
+    getMediaGroups()
+  }, [])
+
+  const getMediaGroups = () => {
     API.graphql(
       graphqlOperation(queries.mediaGroupByOwner, { ownerID: userInfo.id })
     ).then((res) => {
-      InsertMediasIntoGroup(res.data.mediaGroupByOwner.items)
-      setMediaGroups(res.data.mediaGroupByOwner.items)
+      var groups = res.data.mediaGroupByOwner.items
+      var tempGroups = new Array()
+      groups.map((group, key) => {
+        API.graphql(
+          graphqlOperation(queries.mediaByGroup, { groupID: group.id })
+        ).then((res) => {
+          group.medias = res.data.mediaByGroup.items
+          group.key = key
+          tempGroups.push(group)
+        })
+      })
+
+      setMediaGroups(tempGroups)
     })
-  }, [])
+  }
 
   const InsertMediasIntoGroup = (groups) => {
     var temp = groups
-    temp.map(async (group, key) => {
-      await API.graphql(
+    temp.map((group, key) => {
+      API.graphql(
         graphqlOperation(queries.mediaByGroup, { groupID: group.id })
       ).then((res) => {
         group.medias = res.data.mediaByGroup.items
+        group.key = key
       })
     })
     setMediaGroups([...temp])
@@ -173,6 +202,30 @@ const Media = () => {
     }
   }
 
+  const deleteMediaGroup = (id, key) => {
+    const itemId = {
+      id: id,
+    }
+    API.graphql(graphqlOperation(mutations.deleteMediaGroup, { input: itemId }))
+      .then((res) => {
+        Swal.fire({
+          text: "Item is removed successfully.",
+          icon: "success",
+          confirmButtonText: "Retry",
+        })
+        setMediaGroups(mediaGroups.splice(key))
+      })
+      .catch((error) => {
+        console.log(error)
+        Swal.fire({
+          title: "Something Error!",
+          text: "Your operation failed.",
+          icon: "error",
+          confirmButtonText: "Retry",
+        })
+      })
+  }
+
   const renderMediaGroup = (groups) => {
     return groups.map((group, key) => {
       return (
@@ -180,23 +233,35 @@ const Media = () => {
           <Card className="my-1">
             <div className="d-flex">
               <p className="groupTitle ml-1 mt-1">{group.title}</p>
-              <CustomInput
-                type="switch"
-                id="statusOfGroup"
-                name="statusOfGroup"
-                className="ml-auto mr-2 mt-1"
-                defaultValue={true}
-              />
+
+              <Button.Ripple
+                className="btn-icon rounded-circle ml-auto mt-1"
+                outline
+                color="primary"
+                color="danger"
+                onClick={(e) => deleteMediaGroup(group.id, group.key)}>
+                <Trash size={16} />
+              </Button.Ripple>
+
+              {group.status == "public" ? (
+                <CustomInput
+                  type="switch"
+                  id="statusOfGroup"
+                  name="statusOfGroup"
+                  className="mx-2 mt-2"
+                  defaultChecked
+                />
+              ) : (
+                <CustomInput
+                  type="switch"
+                  id="statusOfGroup"
+                  name="statusOfGroup"
+                  className="mx-2 mt-2"
+                />
+              )}
             </div>
 
             <p className="groupMemo ml-1 mt-0">{group.memo}</p>
-
-            {/* <ImgsViewer
-              imgs={[
-                { src: "https://picsum.photos/600/400" },
-                { src: "https://picsum.photos/600/400" },
-              ]}
-            /> */}
             <Row>{renderMedia(group.medias)}</Row>
           </Card>
         </div>
@@ -206,6 +271,18 @@ const Media = () => {
 
   return (
     <>
+      {/* <LoadingOverlay
+        active={true}
+        spinner
+        text="Uploading"
+        styles={{
+          overlay: (base) => ({
+            ...base,
+            position: "absolute",
+            width: "100vw",
+            height: "100vh",
+          }),
+        }}></LoadingOverlay> */}
       <Row>
         <Button.Ripple
           className="ml-3"
@@ -271,7 +348,11 @@ const Media = () => {
           </ModalFooter>
         </Modal>
       </Row>
-      {mediaGroups ? renderMediaGroup(mediaGroups) : <p>shit</p>}
+      {mediaGroups ? (
+        renderMediaGroup(mediaGroups)
+      ) : (
+        <p>There is no medias yet. Please add new.</p>
+      )}
     </>
   )
 }

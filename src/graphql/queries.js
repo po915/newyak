@@ -46,13 +46,13 @@ export const listUserinfos = /* GraphQL */ `
     }
   }
 `;
-export const getFriend = /* GraphQL */ `
-  query GetFriend($id: ID!) {
-    getFriend(id: $id) {
+export const getContact = /* GraphQL */ `
+  query GetContact($id: ID!) {
+    getContact(id: $id) {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -68,23 +68,25 @@ export const getFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
       createdAt
       updatedAt
     }
   }
 `;
-export const listFriends = /* GraphQL */ `
-  query ListFriends(
-    $filter: ModelFriendFilterInput
+export const listContacts = /* GraphQL */ `
+  query ListContacts(
+    $filter: ModelContactFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listFriends(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         selfID
-        friendID
-        friend {
+        contactID
+        contactInfo {
           id
           name
           gender
@@ -100,6 +102,41 @@ export const listFriends = /* GraphQL */ `
           updatedAt
         }
         status
+        isBlocked
+        unseenMsgs
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getChat = /* GraphQL */ `
+  query GetChat($id: ID!) {
+    getChat(id: $id) {
+      id
+      contactID
+      message
+      time
+      senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listChats = /* GraphQL */ `
+  query ListChats(
+    $filter: ModelChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        contactID
+        message
+        time
+        senderID
         createdAt
         updatedAt
       }
@@ -404,16 +441,16 @@ export const listReplys = /* GraphQL */ `
     }
   }
 `;
-export const friendByUser = /* GraphQL */ `
-  query FriendByUser(
+export const contactByUser = /* GraphQL */ `
+  query ContactByUser(
     $selfID: ID
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
-    $filter: ModelFriendFilterInput
+    $filter: ModelContactFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    friendByUser(
+    contactByUser(
       selfID: $selfID
       createdAt: $createdAt
       sortDirection: $sortDirection
@@ -424,8 +461,8 @@ export const friendByUser = /* GraphQL */ `
       items {
         id
         selfID
-        friendID
-        friend {
+        contactID
+        contactInfo {
           id
           name
           gender
@@ -441,6 +478,38 @@ export const friendByUser = /* GraphQL */ `
           updatedAt
         }
         status
+        isBlocked
+        unseenMsgs
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const chatByContact = /* GraphQL */ `
+  query ChatByContact(
+    $contactID: ID
+    $time: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatByContact(
+      contactID: $contactID
+      time: $time
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        contactID
+        message
+        time
+        senderID
         createdAt
         updatedAt
       }
@@ -700,91 +769,6 @@ export const replyByComment = /* GraphQL */ `
         updatedAt
       }
       nextToken
-    }
-  }
-`;
-export const searchUserinfos = /* GraphQL */ `
-  query SearchUserinfos(
-    $filter: SearchableUserinfoFilterInput
-    $sort: SearchableUserinfoSortInput
-    $limit: Int
-    $nextToken: String
-    $from: Int
-  ) {
-    searchUserinfos(
-      filter: $filter
-      sort: $sort
-      limit: $limit
-      nextToken: $nextToken
-      from: $from
-    ) {
-      items {
-        id
-        name
-        gender
-        dob
-        bio
-        avatar
-        banner
-        email
-        phone
-        website
-        country
-        createdAt
-        updatedAt
-      }
-      nextToken
-      total
-    }
-  }
-`;
-export const searchArticles = /* GraphQL */ `
-  query SearchArticles(
-    $filter: SearchableArticleFilterInput
-    $sort: SearchableArticleSortInput
-    $limit: Int
-    $nextToken: String
-    $from: Int
-  ) {
-    searchArticles(
-      filter: $filter
-      sort: $sort
-      limit: $limit
-      nextToken: $nextToken
-      from: $from
-    ) {
-      items {
-        id
-        title
-        content
-        coverImg
-        likes
-        dislikes
-        status
-        ownerID
-        owner {
-          id
-          name
-          gender
-          dob
-          bio
-          avatar
-          banner
-          email
-          phone
-          website
-          country
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-      total
     }
   }
 `;

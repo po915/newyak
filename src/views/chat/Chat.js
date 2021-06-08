@@ -12,7 +12,7 @@ import { sendMsg } from './store/actions'
 // ** Third Party Components
 import classnames from 'classnames'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { MessageSquare, Menu, Search, MoreVertical, Mic, Image, Send } from 'react-feather'
+import { MessageSquare, Menu, Search, MoreVertical, Smile, Image, Send } from 'react-feather'
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -45,6 +45,8 @@ const ChatLog = props => {
     chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
   }
 
+
+
   // ** If user chat is not empty scrollToBottom
   useEffect(() => {
     const selectedUserLen = Object.keys(selectedUser).length
@@ -52,6 +54,8 @@ const ChatLog = props => {
     if (selectedUserLen) {
       scrollToBottom()
     }
+
+    console.log(selectedUser)
   }, [selectedUser])
 
   // ** Formats chat data based on sender
@@ -209,7 +213,7 @@ const ChatLog = props => {
             <InputGroup className='input-group-merge mr-1 form-send-message'>
               <InputGroupAddon addonType='prepend'>
                 <InputGroupText>
-                  <Mic className='cursor-pointer' size={14} />
+                  <Smile className='cursor-pointer' size={14} />
                 </InputGroupText>
               </InputGroupAddon>
               <Input

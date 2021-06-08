@@ -26,7 +26,6 @@ const UserProfileSidebar = props => {
             imgWidth='70'
           />
           <h4 className='chat-user-name'>{user.fullName}</h4>
-          <span className='user-post'>{user.role}</span>
         </div>
       </header>
       <PerfectScrollbar className='user-profile-sidebar-area' options={{ wheelPropagation: false }}>

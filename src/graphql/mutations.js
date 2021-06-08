@@ -67,16 +67,16 @@ export const deleteUserinfo = /* GraphQL */ `
     }
   }
 `;
-export const createFriend = /* GraphQL */ `
-  mutation CreateFriend(
-    $input: CreateFriendInput!
-    $condition: ModelFriendConditionInput
+export const createContact = /* GraphQL */ `
+  mutation CreateContact(
+    $input: CreateContactInput!
+    $condition: ModelContactConditionInput
   ) {
-    createFriend(input: $input, condition: $condition) {
+    createContact(input: $input, condition: $condition) {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -92,21 +92,23 @@ export const createFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
       createdAt
       updatedAt
     }
   }
 `;
-export const updateFriend = /* GraphQL */ `
-  mutation UpdateFriend(
-    $input: UpdateFriendInput!
-    $condition: ModelFriendConditionInput
+export const updateContact = /* GraphQL */ `
+  mutation UpdateContact(
+    $input: UpdateContactInput!
+    $condition: ModelContactConditionInput
   ) {
-    updateFriend(input: $input, condition: $condition) {
+    updateContact(input: $input, condition: $condition) {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -122,21 +124,23 @@ export const updateFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteFriend = /* GraphQL */ `
-  mutation DeleteFriend(
-    $input: DeleteFriendInput!
-    $condition: ModelFriendConditionInput
+export const deleteContact = /* GraphQL */ `
+  mutation DeleteContact(
+    $input: DeleteContactInput!
+    $condition: ModelContactConditionInput
   ) {
-    deleteFriend(input: $input, condition: $condition) {
+    deleteContact(input: $input, condition: $condition) {
       id
       selfID
-      friendID
-      friend {
+      contactID
+      contactInfo {
         id
         name
         gender
@@ -152,6 +156,56 @@ export const deleteFriend = /* GraphQL */ `
         updatedAt
       }
       status
+      isBlocked
+      unseenMsgs
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createChat = /* GraphQL */ `
+  mutation CreateChat(
+    $input: CreateChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    createChat(input: $input, condition: $condition) {
+      id
+      contactID
+      message
+      time
+      senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateChat = /* GraphQL */ `
+  mutation UpdateChat(
+    $input: UpdateChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    updateChat(input: $input, condition: $condition) {
+      id
+      contactID
+      message
+      time
+      senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteChat = /* GraphQL */ `
+  mutation DeleteChat(
+    $input: DeleteChatInput!
+    $condition: ModelChatConditionInput
+  ) {
+    deleteChat(input: $input, condition: $condition) {
+      id
+      contactID
+      message
+      time
+      senderID
       createdAt
       updatedAt
     }

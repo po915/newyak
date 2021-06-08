@@ -1,4 +1,4 @@
-type Userinfo @model @searchable {
+type Userinfo @model {
   id: ID!
   name: String
   gender: String
@@ -10,22 +10,41 @@ type Userinfo @model @searchable {
   phone: String
   website: String
   country: String
+  status: String
   createdAt: AWSDateTime!
 }
 
-type Friend
+type Contact
   @model
   @key(
-    name: "friendByUser"
+    name: "contactByUser"
     fields: ["selfID", "createdAt"]
-    queryField: "friendByUser"
+    queryField: "contactByUser"
   ) {
   id: ID!
   selfID: ID!
-  friendID: ID!
-  friend: Userinfo @connection(fields: ["friendID"])
+  contactID: ID!
+  contactInfo: Userinfo @connection(fields: ["contactID"])
   status: String!
+  writing: Boolean
+  isBlocked: Boolean!
+  unseenMsgs: Int
   createdAt: AWSDateTime!
+}
+
+type Chat
+@model
+@key(
+  name: "chatByContact"
+  fields: ["contactID", "time"]
+  queryField: "chatByContact"
+)
+{
+  id: ID!
+  contactID: ID
+  message: String
+  time: AWSDateTime!
+  senderID: ID
 }
 
 type MediaGroup
@@ -61,7 +80,6 @@ type Media
 # ##########################   Article ##################
 type Article
   @model
-  @searchable
   @key(
     name: "articleByOwner"
     fields: ["ownerID", "createdAt"]

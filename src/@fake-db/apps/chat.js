@@ -1,14 +1,21 @@
 import mock from '../mock'
+import API from "aws-amplify"
+import * as queries from "@src/graphql/queries"
+import * as mutations from "@src/graphql/mutations"
+
 /*eslint-disable */
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
+
+// profileUser stands the current user
+
+
 
 const data = {
   profileUser: {
     id: 11,
     avatar: require('@src/assets/images/portrait/small/avatar-s-8.jpg').default,
     fullName: 'John Doe',
-    role: 'admin',
     about:
       'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
     status: 'online',
@@ -21,16 +28,13 @@ const data = {
     {
       id: 1,
       fullName: 'Felecia Rower',
-      role: 'Frontend Developer',
       about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-
       avatar: require('@src/assets/images/portrait/small/avatar-s-2.jpg').default,
       status: 'offline'
     },
     {
       id: 2,
       fullName: 'Adalberto Granzin',
-      role: 'UI/UX Designer',
       about:
         'Toffee caramels jelly-o tart gummi bears cake I love ice cream lollipop. Sweet liquorice croissant candy danish dessert icing. Cake macaroon gingerbread toffee sweet.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-1.jpg').default,
@@ -39,7 +43,6 @@ const data = {
     {
       id: 3,
       fullName: 'Joaquina Weisenborn',
-      role: 'Town planner',
       about:
         'Soufflé soufflé caramels sweet roll. Jelly lollipop sesame snaps bear claw jelly beans sugar plum sugar plum.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-3.jpg').default,
@@ -48,7 +51,6 @@ const data = {
     {
       id: 4,
       fullName: 'Verla Morgano',
-      role: 'Data scientist',
       about:
         'Chupa chups candy canes chocolate bar marshmallow liquorice muffin. Lemon drops oat cake tart liquorice tart cookie. Jelly-o cookie tootsie roll halvah.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-4.jpg').default,
@@ -57,7 +59,6 @@ const data = {
     {
       id: 5,
       fullName: 'Margot Henschke',
-      role: 'Dietitian',
       about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
       avatar: require('@src/assets/images/portrait/small/avatar-s-5.jpg').default,
       status: 'busy'
@@ -65,7 +66,6 @@ const data = {
     {
       id: 6,
       fullName: 'Sal Piggee',
-      role: 'Marketing executive',
       about:
         'Toffee caramels jelly-o tart gummi bears cake I love ice cream lollipop. Sweet liquorice croissant candy danish dessert icing. Cake macaroon gingerbread toffee sweet.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-6.jpg').default,
@@ -74,7 +74,6 @@ const data = {
     {
       id: 7,
       fullName: 'Miguel Guelff',
-      role: 'Special educational needs teacher',
       about:
         'Biscuit powder oat cake donut brownie ice cream I love soufflé. I love tootsie roll I love powder tootsie roll.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-7.jpg').default,
@@ -83,7 +82,6 @@ const data = {
     {
       id: 8,
       fullName: 'Mauro Elenbaas',
-      role: 'Advertising copywriter',
       about:
         'Bear claw ice cream lollipop gingerbread carrot cake. Brownie gummi bears chocolate muffin croissant jelly I love marzipan wafer.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-8.jpg').default,
@@ -92,7 +90,6 @@ const data = {
     {
       id: 9,
       fullName: 'Bridgett Omohundro',
-      role: 'Designer, television/film set',
       about:
         'Gummies gummi bears I love candy icing apple pie I love marzipan bear claw. I love tart biscuit I love candy canes pudding chupa chups liquorice croissant.',
       avatar: require('@src/assets/images/portrait/small/avatar-s-9.jpg').default,
@@ -101,7 +98,6 @@ const data = {
     {
       id: 10,
       fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
       about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
       avatar: require('@src/assets/images/portrait/small/avatar-s-10.jpg').default,
       status: 'away'
@@ -110,7 +106,6 @@ const data = {
   chats: [
     {
       id: 1,
-      userId: 1,
       unseenMsgs: 0,
       chat: [
         {
@@ -147,7 +142,6 @@ const data = {
     },
     {
       id: 2,
-      userId: 2,
       unseenMsgs: 1,
       chat: [
         {
@@ -210,7 +204,7 @@ const data = {
 // ------------------------------------------------
 mock.onGet('/apps/chat/chats-and-contacts').reply(() => {
   const chatsContacts = data.chats.map(chat => {
-    const contact = data.contacts.find(c => c.id === chat.userId)
+    const contact = data.contacts.find(c => c.id === chat.id)
     contact.chat = { id: chat.id, unseenMsgs: chat.unseenMsgs, lastMessage: chat.chat[chat.chat.length - 1] }
     return contact
   })
@@ -234,14 +228,14 @@ mock.onGet('/apps/chat/users/profile-user').reply(() => [200, data.profileUser])
 mock.onGet('/apps/chat/get-chat').reply(config => {
   // Get event id from URL
 
-  let userId = config.id
+  let chatId = config.id
 
   //  Convert Id to number
-  userId = Number(userId)
+  chatId = Number(chatId)
 
-  const chat = data.chats.find(c => c.id === userId)
+  const chat = data.chats.find(c => c.id === chatId)
   if (chat) chat.unseenMsgs = 0
-  const contact = data.contacts.find(c => c.id === userId)
+  const contact = data.contacts.find(c => c.id === chatId)
   if (contact.chat) contact.chat.unseenMsgs = 0
   return [200, { chat, contact }]
 })
