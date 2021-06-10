@@ -90,11 +90,11 @@ const GeneralTabs = ({ data }) => {
 		S3FileUpload.uploadFile(finalFile, S3config)
 			.then(async (data) => {
 				console.log(data)
-				setAvatar(baseImageURL + finalName)
+				setAvatar(data.location)
 				//Register new avatar
 				const input = {
 					id: userInfo.id,
-					avatar: finalName,
+					avatar: data.location,
 				}
 				await API.graphql(graphqlOperation(mutations.updateUserinfo, { input: input })).then((res) => {
 					dispatch(setUserInfo(res.data.updateUserinfo))
@@ -116,7 +116,7 @@ const GeneralTabs = ({ data }) => {
 					<Media
 						object
 						className="rounded mr-50"
-						src={userInfo.avatar ? baseImageURL + userInfo.avatar : defaultAvatar}
+						src={userInfo.avatar ? userInfo.avatar : defaultAvatar}
 						alt="Generic placeholder image"
 						height="80"
 						width="80"

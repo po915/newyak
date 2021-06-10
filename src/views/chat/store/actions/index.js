@@ -28,6 +28,7 @@ export const getChatContacts = () => {
 export const selectChat = id => {
   return dispatch => {
     axios.get('/apps/chat/get-chat', { id }).then(res => {
+      console.log(res.data, "action/selectChat/get-chat")
       dispatch({ type: 'SELECT_CHAT', data: res.data })
       dispatch(getChatContacts())
     })
@@ -43,3 +44,4 @@ export const sendMsg = obj => {
     })
   }
 }
+

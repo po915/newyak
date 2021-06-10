@@ -19,7 +19,6 @@ import { Settings, Power } from "react-feather"
 const UserDropdown = () => {
 	// ** Store Vars
 	const dispatch = useDispatch()
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 	// ** State
 	const [userData, setUserData] = useState(null)
 	const [avatar, setAvatar] = useState(null)
@@ -29,7 +28,7 @@ const UserDropdown = () => {
 	
 	useEffect(() => {
 		if (userInfo?.avatar) {
-			setAvatar(baseImageURL + userInfo.avatar)
+			setAvatar(userInfo.avatar)
 		}
 	}, [])
 

@@ -1,4 +1,4 @@
-type Userinfo @model {
+type Userinfo @model @searchable {
   id: ID!
   name: String
   gender: String
@@ -18,33 +18,40 @@ type Contact
   @model
   @key(
     name: "contactByUser"
-    fields: ["selfID", "createdAt"]
+    fields: ["ownerID"]
     queryField: "contactByUser"
   ) {
-  id: ID!
-  selfID: ID!
-  contactID: ID!
-  contactInfo: Userinfo @connection(fields: ["contactID"])
-  status: String!
-  writing: Boolean
-  isBlocked: Boolean!
+  id: ID
+  ownerID: ID
+  friendID: ID
+  info: Userinfo @connection(fields: ["friendID"])
   unseenMsgs: Int
-  createdAt: AWSDateTime!
+  chats: [Chat] @connection(keyName: "chatByContact", fields: ["id"])
 }
 
 type Chat
 @model
 @key(
-  name: "chatByContact"
-  fields: ["contactID", "time"]
+  name: "chatByContact",
+  fields: ["contactID", "time"],
   queryField: "chatByContact"
 )
 {
-  id: ID!
+  id: ID
   contactID: ID
   message: String
-  time: AWSDateTime!
+  time: AWSDateTime
   senderID: ID
+}
+
+type Message @model @searchable {
+  id: ID!
+  fromID: ID
+  toID: ID
+  content: String
+  attached: String
+  sendAt: AWSDateTime
+  readAt: AWSDateTime
 }
 
 type MediaGroup

@@ -1,5 +1,3 @@
-
-
 #if( $authCondition && $authCondition.expression != "" )
   #set( $condition = $authCondition )
   #if( $modelObjectKey )
@@ -38,7 +36,7 @@
 #end
 ## Automatically set the updatedAt timestamp. **
 $util.qr($context.args.input.put("updatedAt", $util.defaultIfNull($ctx.args.input.updatedAt, $util.time.nowISO8601())))
-$util.qr($context.args.input.put("__typename", "MediaGroup"))
+$util.qr($context.args.input.put("__typename", "Message"))
 ## Update condition if type is @versioned **
 #if( $versionedCondition )
   $util.qr($condition.put("expression", "($condition.expression) AND $versionedCondition.expression"))

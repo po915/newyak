@@ -15,6 +15,7 @@ export const getUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -39,6 +40,7 @@ export const listUserinfos = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -50,9 +52,9 @@ export const getContact = /* GraphQL */ `
   query GetContact($id: ID!) {
     getContact(id: $id) {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -64,12 +66,23 @@ export const getContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -84,9 +97,9 @@ export const listContacts = /* GraphQL */ `
     listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        selfID
-        contactID
-        contactInfo {
+        ownerID
+        friendID
+        info {
           id
           name
           gender
@@ -98,12 +111,23 @@ export const listContacts = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
-        status
-        isBlocked
         unseenMsgs
+        chats {
+          items {
+            id
+            contactID
+            message
+            time
+            senderID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -137,6 +161,43 @@ export const listChats = /* GraphQL */ `
         message
         time
         senderID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        fromID
+        toID
+        content
+        attached
+        sendAt
+        readAt
         createdAt
         updatedAt
       }
@@ -182,6 +243,14 @@ export const listMediaGroups = /* GraphQL */ `
         memo
         status
         medias {
+          items {
+            id
+            groupID
+            type
+            path
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -245,6 +314,7 @@ export const getArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -253,7 +323,34 @@ export const getArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -292,10 +389,38 @@ export const listArticles = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
         comments {
+          items {
+            id
+            content
+            ownerID
+            owner {
+              id
+              name
+              gender
+              dob
+              bio
+              avatar
+              banner
+              email
+              phone
+              website
+              country
+              status
+              createdAt
+              updatedAt
+            }
+            articleID
+            replys {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -323,6 +448,7 @@ export const getComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -332,6 +458,22 @@ export const getComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -366,11 +508,36 @@ export const listComments = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
         articleID
         replys {
+          items {
+            id
+            content
+            ownerID
+            owner {
+              id
+              name
+              gender
+              dob
+              bio
+              avatar
+              banner
+              email
+              phone
+              website
+              country
+              status
+              createdAt
+              updatedAt
+            }
+            commentID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -398,6 +565,7 @@ export const getReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -430,6 +598,7 @@ export const listReplys = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
@@ -443,16 +612,14 @@ export const listReplys = /* GraphQL */ `
 `;
 export const contactByUser = /* GraphQL */ `
   query ContactByUser(
-    $selfID: ID
-    $createdAt: ModelStringKeyConditionInput
+    $ownerID: ID
     $sortDirection: ModelSortDirection
     $filter: ModelContactFilterInput
     $limit: Int
     $nextToken: String
   ) {
     contactByUser(
-      selfID: $selfID
-      createdAt: $createdAt
+      ownerID: $ownerID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -460,9 +627,9 @@ export const contactByUser = /* GraphQL */ `
     ) {
       items {
         id
-        selfID
-        contactID
-        contactInfo {
+        ownerID
+        friendID
+        info {
           id
           name
           gender
@@ -474,12 +641,23 @@ export const contactByUser = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
-        status
-        isBlocked
         unseenMsgs
+        chats {
+          items {
+            id
+            contactID
+            message
+            time
+            senderID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -541,6 +719,14 @@ export const mediaGroupByOwner = /* GraphQL */ `
         memo
         status
         medias {
+          items {
+            id
+            groupID
+            type
+            path
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -617,10 +803,38 @@ export const articleByOwner = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
         comments {
+          items {
+            id
+            content
+            ownerID
+            owner {
+              id
+              name
+              gender
+              dob
+              bio
+              avatar
+              banner
+              email
+              phone
+              website
+              country
+              status
+              createdAt
+              updatedAt
+            }
+            articleID
+            replys {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -668,10 +882,38 @@ export const articleByStatus = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
         comments {
+          items {
+            id
+            content
+            ownerID
+            owner {
+              id
+              name
+              gender
+              dob
+              bio
+              avatar
+              banner
+              email
+              phone
+              website
+              country
+              status
+              createdAt
+              updatedAt
+            }
+            articleID
+            replys {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -714,11 +956,36 @@ export const commentByArticle = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
         articleID
         replys {
+          items {
+            id
+            content
+            ownerID
+            owner {
+              id
+              name
+              gender
+              dob
+              bio
+              avatar
+              banner
+              email
+              phone
+              website
+              country
+              status
+              createdAt
+              updatedAt
+            }
+            commentID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -761,6 +1028,7 @@ export const replyByComment = /* GraphQL */ `
           phone
           website
           country
+          status
           createdAt
           updatedAt
         }
@@ -769,6 +1037,73 @@ export const replyByComment = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const searchUserinfos = /* GraphQL */ `
+  query SearchUserinfos(
+    $filter: SearchableUserinfoFilterInput
+    $sort: SearchableUserinfoSortInput
+    $limit: Int
+    $nextToken: String
+    $from: Int
+  ) {
+    searchUserinfos(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+    ) {
+      items {
+        id
+        name
+        gender
+        dob
+        bio
+        avatar
+        banner
+        email
+        phone
+        website
+        country
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+    }
+  }
+`;
+export const searchMessages = /* GraphQL */ `
+  query SearchMessages(
+    $filter: SearchableMessageFilterInput
+    $sort: SearchableMessageSortInput
+    $limit: Int
+    $nextToken: String
+    $from: Int
+  ) {
+    searchMessages(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+    ) {
+      items {
+        id
+        fromID
+        toID
+        content
+        attached
+        sendAt
+        readAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
     }
   }
 `;

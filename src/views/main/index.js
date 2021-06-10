@@ -5,6 +5,7 @@ import UILoader from "@components/ui-loader"
 import ProfileAbout from "./ProfileAbout"
 import ProfilePosts from "./ProfilePosts"
 import Media from "./Media"
+import Friend from "./Friend"
 import {
 	Row,
 	Col,
@@ -37,7 +38,6 @@ const Profile = () => {
 	const [data, setData] = useState(null)
 	const [block, setBlock] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 	const [activeTab, setActiveTab] = useState("1")
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab)
@@ -73,7 +73,7 @@ const Profile = () => {
 									<div className="profile-img-container d-flex align-items-center">
 										<div className="profile-img">
 											{userInfo.avatar ? (
-												<img className="rounded img-fluid" src={baseImageURL + userInfo.avatar} alt="Card image" />
+												<img className="rounded img-fluid" src={userInfo.avatar} alt="Card image" />
 											) : (
 												<img className="rounded img-fluid" src={defaultAvatar} alt="Card image" />
 											)}
@@ -115,7 +115,7 @@ const Profile = () => {
 															<Image className="d-block d-md-none" size={14} />
 														</NavLink>
 													</NavItem>
-													<NavItem>
+													{/* <NavItem>
 														<NavLink
 															className="font-weight-bold"
 															className={classnames({ active: activeTab === "3" })}
@@ -126,7 +126,7 @@ const Profile = () => {
 															<span className="d-none d-md-block">Friends</span>
 															<Users className="d-block d-md-none" size={14} />
 														</NavLink>
-													</NavItem>
+													</NavItem> */}
 												</Nav>
 												<Button color="primary">
 													<Edit className="d-block d-md-none" size={14} />
@@ -175,9 +175,9 @@ const Profile = () => {
 						<TabPane tabId="2">
 							<Media />
 						</TabPane>
-						<TabPane tabId="3">
-							Friends
-						</TabPane>
+						{/* <TabPane tabId="3">
+							<Friend />
+						</TabPane> */}
 					</TabContent>
 				</div>
 			) : null}

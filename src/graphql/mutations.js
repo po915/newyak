@@ -18,6 +18,7 @@ export const createUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -40,6 +41,7 @@ export const updateUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -62,6 +64,7 @@ export const deleteUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -74,9 +77,9 @@ export const createContact = /* GraphQL */ `
   ) {
     createContact(input: $input, condition: $condition) {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -88,12 +91,23 @@ export const createContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -106,9 +120,9 @@ export const updateContact = /* GraphQL */ `
   ) {
     updateContact(input: $input, condition: $condition) {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -120,12 +134,23 @@ export const updateContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -138,9 +163,9 @@ export const deleteContact = /* GraphQL */ `
   ) {
     deleteContact(input: $input, condition: $condition) {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -152,12 +177,23 @@ export const deleteContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -206,6 +242,60 @@ export const deleteChat = /* GraphQL */ `
       message
       time
       senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    createMessage(input: $input, condition: $condition) {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateMessage = /* GraphQL */ `
+  mutation UpdateMessage(
+    $input: UpdateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    updateMessage(input: $input, condition: $condition) {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteMessage = /* GraphQL */ `
+  mutation DeleteMessage(
+    $input: DeleteMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    deleteMessage(input: $input, condition: $condition) {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
       createdAt
       updatedAt
     }
@@ -363,6 +453,7 @@ export const createArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -371,7 +462,34 @@ export const createArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -408,6 +526,7 @@ export const updateArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -416,7 +535,34 @@ export const updateArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -453,6 +599,7 @@ export const deleteArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -461,7 +608,34 @@ export const deleteArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -493,6 +667,7 @@ export const createComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -502,6 +677,22 @@ export const createComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -534,6 +725,7 @@ export const updateComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -543,6 +735,22 @@ export const updateComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -575,6 +783,7 @@ export const deleteComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -584,6 +793,22 @@ export const deleteComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -616,6 +841,7 @@ export const createReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -646,6 +872,7 @@ export const updateReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -676,6 +903,7 @@ export const deleteReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }

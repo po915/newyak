@@ -15,6 +15,7 @@ export const onCreateUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -34,6 +35,7 @@ export const onUpdateUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -53,6 +55,7 @@ export const onDeleteUserinfo = /* GraphQL */ `
       phone
       website
       country
+      status
       createdAt
       updatedAt
     }
@@ -62,9 +65,9 @@ export const onCreateContact = /* GraphQL */ `
   subscription OnCreateContact {
     onCreateContact {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -76,12 +79,23 @@ export const onCreateContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -91,9 +105,9 @@ export const onUpdateContact = /* GraphQL */ `
   subscription OnUpdateContact {
     onUpdateContact {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -105,12 +119,23 @@ export const onUpdateContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -120,9 +145,9 @@ export const onDeleteContact = /* GraphQL */ `
   subscription OnDeleteContact {
     onDeleteContact {
       id
-      selfID
-      contactID
-      contactInfo {
+      ownerID
+      friendID
+      info {
         id
         name
         gender
@@ -134,12 +159,23 @@ export const onDeleteContact = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
-      status
-      isBlocked
       unseenMsgs
+      chats {
+        items {
+          id
+          contactID
+          message
+          time
+          senderID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -179,6 +215,51 @@ export const onDeleteChat = /* GraphQL */ `
       message
       time
       senderID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateMessage = /* GraphQL */ `
+  subscription OnCreateMessage {
+    onCreateMessage {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMessage = /* GraphQL */ `
+  subscription OnUpdateMessage {
+    onUpdateMessage {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMessage = /* GraphQL */ `
+  subscription OnDeleteMessage {
+    onDeleteMessage {
+      id
+      fromID
+      toID
+      content
+      attached
+      sendAt
+      readAt
       createdAt
       updatedAt
     }
@@ -315,6 +396,7 @@ export const onCreateArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -323,7 +405,34 @@ export const onCreateArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -357,6 +466,7 @@ export const onUpdateArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -365,7 +475,34 @@ export const onUpdateArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -399,6 +536,7 @@ export const onDeleteArticle = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -407,7 +545,34 @@ export const onDeleteArticle = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           articleID
+          replys {
+            items {
+              id
+              content
+              ownerID
+              commentID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -436,6 +601,7 @@ export const onCreateComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -445,6 +611,22 @@ export const onCreateComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -474,6 +656,7 @@ export const onUpdateComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -483,6 +666,22 @@ export const onUpdateComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -512,6 +711,7 @@ export const onDeleteComment = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -521,6 +721,22 @@ export const onDeleteComment = /* GraphQL */ `
           id
           content
           ownerID
+          owner {
+            id
+            name
+            gender
+            dob
+            bio
+            avatar
+            banner
+            email
+            phone
+            website
+            country
+            status
+            createdAt
+            updatedAt
+          }
           commentID
           createdAt
           updatedAt
@@ -550,6 +766,7 @@ export const onCreateReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -577,6 +794,7 @@ export const onUpdateReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
@@ -604,6 +822,7 @@ export const onDeleteReply = /* GraphQL */ `
         phone
         website
         country
+        status
         createdAt
         updatedAt
       }
