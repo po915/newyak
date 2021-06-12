@@ -62,26 +62,13 @@ const SidebarLeft = (props) => {
         filter: { ownerID: { eq: currentUser.id } },
       })
     ).then((res) => {
-      var temp = new Array()
-      res.data.listContacts.items.map((item, index) => {
-        var contact = {
-          avatar: item.info.avatar,
-          name: item.info.name,
-          friendId: item.friendID,
-          contactID: item.id,
-          unseenMsgs: item.unseenMsgs,
-        }
-        temp.push(contact)
-      })
-      setContacts(temp)
+      setContacts(res.data.listContacts.items)
     })
   }, [])
 
-  const handleUserClick = (type, id) => {
-    dispatch({type: "SELETED_CONTACT", data: id })
-
-    // dispatch(selectChat(id))
-    setActive({ type, id })
+  const handleUserClick = (userinfo) => {
+    dispatch({ type: "SELECTED_USER", data: userinfo })
+    setActive(userinfo.id)
     if (sidebar === true) {
       handleSidebar()
     }
@@ -103,13 +90,22 @@ const SidebarLeft = (props) => {
           return (
             <li
               className={classnames({
-                active: active.type === "contact" && active.id === item.contactID,
+                active: active == item.info.id,
               })}
-              key={item.name}
-              onClick={() => handleUserClick("contact", item.contactID)}>
-              <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
+              key={item.id}
+              onClick={() => handleUserClick(item.info)}>
+              {item.info.avatar ? (
+                <Avatar img={item.info.avatar} imgHeight="42" imgWidth="42" />
+              ) : (
+                <Avatar
+                  content={item.info.name}
+                  initials
+                  imgHeight="42"
+                  imgWidth="42"
+                />
+              )}
               <div className="chat-info flex-grow-1">
-                <h5 className="my-auto">{item.name}</h5>
+                <h5 className="my-auto">{item.info.name}</h5>
               </div>
               <div className="chat-meta text-nowrap">
                 {item.unseenMsgs >= 1 ? (
@@ -130,7 +126,7 @@ const SidebarLeft = (props) => {
   // ** Handles Filter
   useEffect(() => {
     const searchFilterFunction = (contact) =>
-      contact.name.toLowerCase().includes(query.toLowerCase())
+      contact.info.name.toLowerCase().includes(query.toLowerCase())
     const filteredContactssArr = contacts.filter(searchFilterFunction)
     setFilteredContacts([...filteredContactssArr])
     searchNewContact()
@@ -157,11 +153,21 @@ const SidebarLeft = (props) => {
         return (
           <li
             className={classnames({
-              active: active.type === "contact" && active.id === item.id,
+              active: active == item.id,
             })}
             key={item.name}
-            onClick={() => handleUserClick("contact", item.id)}>
-            <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
+            onClick={() => handleUserClick(item)}>
+            {item.avatar ? (
+              <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
+            ) : (
+              <Avatar
+                content={item.name}
+                initials
+                color="light-primary"
+                imgHeight="42"
+                imgWidth="42"
+              />
+            )}
             <div className="chat-info flex-grow-1">
               <h5 className="mb-0">{item.name}</h5>
               <CardText className="text-truncate">{item.bio}</CardText>

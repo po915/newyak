@@ -17,8 +17,10 @@ const chatReducer = (state = initialState, action) => {
     //   // ** Add new msg to chat
     //   const newMsg = action.data.response.chat
     //   return { ...state, selectedUser: { ...state.selectedUser, chat: newMsg } }
-    case 'SELETED_CONTACT' :
-      return {...state, selectedContact: action.data }
+    case 'SELECTED_USER' :
+      return {...state, selectedUser: action.data }
+    case 'SELECT_NEW_CONTACT' :
+    return {...state, selectedNewContact: action.data }
     default:
       return state
   }
