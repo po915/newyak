@@ -35,24 +35,7 @@ import LoadingOverlay from "react-loading-overlay"
 import Swal from "sweetalert2/dist/sweetalert2.js"
 import "sweetalert2/src/sweetalert2.scss"
 
-const ToastContent = ({ name, role }) => (
-  <Fragment>
-    <div className="toastify-header">
-      <div className="title-wrapper">
-        <Avatar size="sm" color="success" icon={<Coffee size={12} />} />
-        <h6 className="toast-title font-weight-bold">Welcome, {name}</h6>
-      </div>
-    </div>
-    <div className="toastify-body">
-      <span>
-        You have successfully logged in as an {role} user to Yakkaz. Now you can
-        start to explore. Enjoy!
-      </span>
-    </div>
-  </Fragment>
-)
-
-const Login = (props) => {
+const Login = () => {
   const [skin, setSkin] = useSkin()
   const ability = useContext(AbilityContext)
   const dispatch = useDispatch()

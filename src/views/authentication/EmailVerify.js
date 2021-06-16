@@ -144,7 +144,7 @@ const EmailVerify = () => {
               <CardText className="mb-2">
                 Check your inbox and please enter the verify code here.
               </CardText>
-              <Form className="auth-forgot-password-form mt-2">
+              <Form className="auth-forgot-password-form mt-2" onSubmit={onSubmit}>
                 <FormGroup>
                   <Label className="form-label" for="login-email">
                     Code
@@ -163,7 +163,7 @@ const EmailVerify = () => {
                     Resend Code
                   </Link>
                 </p>
-                <Button.Ripple onClick={onSubmit} color="primary" block>
+                <Button.Ripple type="submit" color="primary" block>
                   Send Code
                 </Button.Ripple>
               </Form>

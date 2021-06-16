@@ -49,7 +49,6 @@ const UserDropdown = () => {
                 color="light-primary"
                 imgHeight="40"
                 imgWidth="40"
-                status="online"
               />
             ) : (
               <Avatar
@@ -58,7 +57,6 @@ const UserDropdown = () => {
                 initials
                 imgHeight="40"
                 imgWidth="40"
-                status="online"
               />
             )}
           </DropdownToggle>

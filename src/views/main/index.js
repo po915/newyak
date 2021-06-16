@@ -1,11 +1,8 @@
 import { Fragment, useState, useEffect } from "react"
-import axios from "axios"
 import classnames from "classnames"
-import UILoader from "@components/ui-loader"
 import ProfileAbout from "./ProfileAbout"
 import ProfilePosts from "./ProfilePosts"
 import Media from "./Media"
-
 import {
   Row,
   Col,
@@ -29,8 +26,6 @@ import "@styles/react/pages/page-profile.scss"
 import { useSelector } from "react-redux"
 
 const Profile = () => {
-
-  const [block, setBlock] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("1")
   const toggle = (tab) => {
@@ -39,12 +34,7 @@ const Profile = () => {
 
   const userInfo = useSelector((state) => state.userinfo.userInfo)
 
-  const handleBlock = () => {
-    setBlock(true)
-    setTimeout(() => {
-      setBlock(false)
-    }, 2000)
-  }
+
 
   return (
     <Fragment>
@@ -158,21 +148,6 @@ const Profile = () => {
                       xs={{ order: 3 }}>
                       <p>My Friends</p>
                       <ProfileFriendsSuggestions />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="text-center" sm="12">
-                      <Button
-                        color="primary"
-                        className="border-0 mb-1 profile-load-more"
-                        size="sm"
-                        onClick={handleBlock}>
-                        <UILoader
-                          blocking={block}
-                          overlayColor="rgba(255,255,255, .5)">
-                          <span> Load More</span>
-                        </UILoader>
-                      </Button>
                     </Col>
                   </Row>
                 </Col>

@@ -72,6 +72,7 @@ const BlogList = () => {
 			<div className={visiablity}>
 				<img src={loadingImg} className="loadingIcon" />
 			</div>
+			<h2>Your published articles.</h2>
 			{articleData ? (
 				<Row className="match-height">
 					{articleData.map((item, index) => {

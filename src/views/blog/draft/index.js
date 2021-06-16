@@ -72,6 +72,7 @@ const BlogList = () => {
 			<div className={visiablity}>
 				<img src={loadingImg} className="loadingIcon" />
 			</div>
+			<h2>Your drafts</h2>
 			<Row className="match-height">
 				{draftData.map((item, index) => {
 					return (

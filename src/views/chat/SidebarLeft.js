@@ -131,6 +131,7 @@ const SidebarLeft = (props) => {
                 <Avatar
                   content={item.info.name}
                   initials
+                  className="contact-avatar"
                   imgHeight="42"
                   imgWidth="42"
                 />
@@ -246,87 +247,6 @@ const SidebarLeft = (props) => {
     <div className="sidebar-left">
       <div className="sidebar">
         <div
-          className={classnames("chat-profile-sidebar", {
-            show: userSidebarLeft,
-          })}>
-          <header className="chat-profile-header">
-            <div className="close-icon" onClick={handleUserSidebarLeft}>
-              <X size={14} />
-            </div>
-            <div className="header-profile-sidebar">
-              {currentUser.avatar ? (
-                <Avatar
-                  className="box-shadow-1 avatar-border"
-                  img={currentUser.avatar}
-                  status={status}
-                  size="xl"
-                />
-              ) : (
-                <Avatar
-                  className="box-shadow-1 avatar-border"
-                  content={currentUser.name}
-                  initials
-                  status={status}
-                  size="xl"
-                />
-              )}
-
-              <h4 className="chat-user-name">{currentUser.name}</h4>
-            </div>
-          </header>
-          <PerfectScrollbar
-            className="profile-sidebar-area"
-            options={{ wheelPropagation: false }}>
-            <h6 className="section-label mb-1 mt-3">Status</h6>
-            <ul className="list-unstyled user-status">
-              <li className="pb-1">
-                <CustomInput
-                  type="radio"
-                  className="custom-control-primary"
-                  id="online"
-                  label="Online"
-                  onChange={(e) => setStatus("online")}
-                  checked={status === "online"}
-                />
-              </li>
-              <li className="pb-1">
-                <CustomInput
-                  type="radio"
-                  className="custom-control-danger"
-                  id="busy"
-                  label="Do Not Disturb"
-                  onChange={(e) => setStatus("busy")}
-                  checked={status === "busy"}
-                />
-              </li>
-              <li className="pb-1">
-                <CustomInput
-                  type="radio"
-                  className="custom-control-warning"
-                  id="away"
-                  label="Away"
-                  onChange={(e) => setStatus("away")}
-                  checked={status === "away"}
-                />
-              </li>
-              <li className="pb-1">
-                <CustomInput
-                  type="radio"
-                  className="custom-control-secondary"
-                  id="offline"
-                  label="Offline"
-                  onChange={(e) => setStatus("offline")}
-                  checked={status === "offline"}
-                />
-              </li>
-            </ul>
-
-            <div className="mt-3">
-              <Button color="primary">Logout</Button>
-            </div>
-          </PerfectScrollbar>
-        </div>
-        <div
           className={classnames("sidebar-content", {
             show: sidebar === true,
           })}>
@@ -335,30 +255,7 @@ const SidebarLeft = (props) => {
           </div>
           <div className="chat-fixed-search">
             <div className="d-flex align-items-center w-100">
-              <div
-                className="sidebar-profile-toggle"
-                onClick={handleUserSidebarLeft}>
-                {currentUser.avatar ? (
-                  <Avatar
-                    className="avatar-border"
-                    img={currentUser.avatar}
-                    status={currentUser.status}
-                    imgHeight="42"
-                    imgWidth="42"
-                  />
-                ) : (
-                  <Avatar
-                    className="avatar-border"
-                    content={currentUser.name}
-                    initials
-                    color="light-primary"
-                    status={currentUser.status}
-                    imgHeight="42"
-                    imgWidth="42"
-                  />
-                )}
-              </div>
-              <InputGroup className="input-group-merge ml-1 w-100">
+              <InputGroup className="input-group-merge w-100">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText className="round">
                     <Search className="text-muted" size={14} />

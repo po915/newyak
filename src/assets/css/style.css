@@ -127,3 +127,17 @@
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+
+.contact-avatar {
+	width: 42px !important;
+}
+
+.contact-avatar .avatar-content {
+	width: 42px !important;
+	height: 42px !important;
+}
+
+.emojiPicker-box {
+	position: absolute;
+	bottom: 65px;
+}

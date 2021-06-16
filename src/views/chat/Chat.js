@@ -8,13 +8,7 @@ import { useSelector } from "react-redux"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import {
-  MessageSquare,
-  Menu,
-  Smile,
-  Image,
-  Send,
-} from "react-feather"
+import { MessageSquare, Menu, Smile, Image, Send } from "react-feather"
 import {
   Form,
   Label,
@@ -29,6 +23,8 @@ import * as mutations from "@src/graphql/mutations"
 import * as queries from "@src/graphql/queries"
 import * as subscriptions from "@src/graphql/subscriptions"
 
+import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react"
+
 const ChatLog = (props) => {
   const { handleUser, handleUserSidebarRight, handleSidebar, userSidebarLeft } =
     props
@@ -37,12 +33,15 @@ const ChatLog = (props) => {
   const [myContact, setMyContact] = useState({})
   const [yourContact, setYourContact] = useState({})
   const [updateMsg, setUpdateMsg] = useState({})
+  const [emojiShow, setEmojiShow] = useState(false)
   // ** Refs & Dispatch
   const chatArea = useRef(null)
 
   // ** State
   const [chatLog, setChatLog] = useState([])
   const [newMessage, setNewMessage] = useState("")
+
+  const newMsgInput = useRef()
 
   useEffect(() => {
     if (Object.keys(selectedUser).length > 0) {
@@ -226,6 +225,7 @@ const ChatLog = (props) => {
 
   const sendMessage = (e) => {
     e.preventDefault()
+    setEmojiShow(false)
     if (newMessage) {
       // if (chatLog.length > 0) {
       const newMsg = {
@@ -254,13 +254,11 @@ const ChatLog = (props) => {
       API.graphql(
         graphqlOperation(mutations.updateContact, { input: setUnread })
       )
-      // } else {
-      //   addNewContact()
-      // }
     }
   }
 
   const onInputFocus = (e) => {
+    setEmojiShow(false)
     const setUnread = {
       id: myContact.id,
       unseenMsgs: false,
@@ -276,6 +274,20 @@ const ChatLog = (props) => {
       }
       API.graphql(
         graphqlOperation(mutations.updateContact, { input: accept })
+      ).then((res) => {
+        setMyContact(res.data.updateContact)
+      })
+    }
+  }
+
+  const denyInvite = () => {
+    if (myContact?.id) {
+      const deny = {
+        id: myContact.id,
+        accepted: "blocked",
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: deny })
       ).then((res) => {
         setMyContact(res.data.updateContact)
       })
@@ -308,8 +320,28 @@ const ChatLog = (props) => {
     }
   }
 
+  const unBlock = () => {
+    if (myContact?.id) {
+      const deny = {
+        id: myContact.id,
+        accepted: "yes",
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: deny })
+      ).then((res) => {
+        setMyContact(res.data.updateContact)
+      })
+    }
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setEmojiShow(false)
+    newMsgInput.current.focus()
+    setNewMessage(newMessage + emojiObject.emoji)
+  }
+
   const chatMain = () => {
-    // before accept
+    // i'm waiting his acceptance
     if (yourContact.accepted == "pending" && myContact.accepted == "yes") {
       return (
         <>
@@ -325,7 +357,29 @@ const ChatLog = (props) => {
         </>
       )
     }
-    // accepted
+    // he invited me
+    if (myContact.accepted == "pending" && yourContact.accepted == "yes") {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            <div className="box-1">
+              <p>{selectedUser.name} is going to add you as his/her friend.</p>
+              <Button color="primary" className="mr-1" onClick={acceptInvite}>
+                Accept
+              </Button>
+              <Button color="warning" onClick={denyInvite}>
+                Deny
+              </Button>
+            </div>
+          </ChatWrapper>
+          <Form className="chat-app-form"></Form>
+        </>
+      )
+    }
+    // he accepted my invitation, all of us can have chat
     if (yourContact.accepted == "yes" && myContact.accepted == "yes") {
       return (
         <>
@@ -335,31 +389,37 @@ const ChatLog = (props) => {
             options={{ wheelPropagation: false }}>
             {chatLog ? <div className="chats">{renderChats()}</div> : null}
           </ChatWrapper>
+          {emojiShow ? (
+            <div className="emojiPicker-box">
+              <Picker
+                onEmojiClick={onEmojiClick}
+                disableAutoFocus={true}
+                skinTone={SKIN_TONE_MEDIUM_DARK}
+                groupNames={{ smileys_people: "PEOPLE" }}
+                native
+              />
+            </div>
+          ) : null}
           <Form className="chat-app-form" onSubmit={(e) => sendMessage(e)}>
             <InputGroup className="input-group-merge mr-1 form-send-message">
               <InputGroupAddon addonType="prepend">
                 <InputGroupText>
-                  <Smile className="cursor-pointer" size={14} />
+                  <Smile
+                    className="cursor-pointer"
+                    onClick={() => setEmojiShow(!emojiShow)}
+                    size={14}
+                  />
                 </InputGroupText>
               </InputGroupAddon>
               <Input
                 id="new_msg"
                 autoComplete="false"
+                ref={newMsgInput}
+                value={newMessage}
                 onFocus={(e) => onInputFocus(e)}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Message here..."
               />
-              <InputGroupAddon addonType="append">
-                <InputGroupText>
-                  <Label className="attachment-icon mb-0" for="attach-doc">
-                    <Image
-                      className="cursor-pointer text-secondary"
-                      size={14}
-                    />
-                    <input type="file" id="attach-doc" hidden />
-                  </Label>
-                </InputGroupText>
-              </InputGroupAddon>
             </InputGroup>
             <Button className="send" color="primary">
               <Send size={14} className="d-lg-none" />
@@ -369,8 +429,8 @@ const ChatLog = (props) => {
         </>
       )
     }
-    // denined
-    if (yourContact.accepted == "blocked" || myContact.accepted == "blocked") {
+    // he blocked me
+    if (yourContact.accepted == "blocked") {
       return (
         <>
           <ChatWrapper
@@ -378,9 +438,8 @@ const ChatLog = (props) => {
             className="user-chats"
             options={{ wheelPropagation: false }}>
             <div className="box-1">
-              <Button
-                color="primary"
-                className="mr-1">
+              <p>Sorry, {selectedUser.name} blocked you.</p>
+              <Button color="danger" className="mr-1">
                 Blocked
               </Button>
             </div>
@@ -389,8 +448,8 @@ const ChatLog = (props) => {
         </>
       )
     }
-    // accept
-    if (myContact.accepted == "pending" && yourContact.accepted == "yes") {
+    // i blocked him
+    if (myContact.accepted == "blocked") {
       return (
         <>
           <ChatWrapper
@@ -398,11 +457,12 @@ const ChatLog = (props) => {
             className="user-chats"
             options={{ wheelPropagation: false }}>
             <div className="box-1">
-              <Button
-                color="primary"
-                className="mr-1"
-                onClick={() => acceptInvite()}>
-                Accept
+              <p>Sorry, You blocked {selectedUser.name}.</p>
+              <Button color="danger" className="mr-1">
+                Blocked
+              </Button>
+              <Button color="info" onClick={unBlock}>
+                Unblock
               </Button>
             </div>
           </ChatWrapper>
@@ -410,7 +470,7 @@ const ChatLog = (props) => {
         </>
       )
     }
-    //blank
+    // new user
     if (Object.keys(selectedUser).length > 0) {
       return (
         <>

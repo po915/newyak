@@ -263,7 +263,7 @@ const Media = () => {
                       </Col>
                     )
                   })
-                : null}
+                : <p className="ml-2">You have no shared photo yet.</p> }
             </Row>
           </SRLWrapper>
         </Col>
@@ -320,7 +320,7 @@ const Media = () => {
                     </Col>
                   )
                 })
-              : null}
+              : <p className="ml-2">You have no shared video yet.</p> }
           </Row>
         </Col>
       </Row>

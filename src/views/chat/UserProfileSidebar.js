@@ -68,14 +68,11 @@ const UserProfileSidebar = (props) => {
 
   const blockContact = () => {
     if (Object.keys(myContact).length > 0) {
-      alert("wfee")
       const update = {
         id: myContact.id,
         accepted: "blocked",
       }
-      API.graphql(
-        graphqlOperation(mutations.updateContact, { input: update })
-      ).then((res) => console.log(res))
+      API.graphql(graphqlOperation(mutations.updateContact, { input: update }))
     }
   }
 
@@ -93,7 +90,6 @@ const UserProfileSidebar = (props) => {
             <Avatar
               className="box-shadow-1 avatar-border"
               size="xl"
-              status={selectedUser.status}
               img={selectedUser.avatar}
               imgHeight="70"
               imgWidth="70"
@@ -105,7 +101,6 @@ const UserProfileSidebar = (props) => {
               content={selectedUser.name}
               initials
               color="light-primary"
-              status={selectedUser.status}
               imgHeight="70"
               imgWidth="70"
             />
@@ -135,11 +130,11 @@ const UserProfileSidebar = (props) => {
         <div className="more-options">
           <h6 className="section-label mb-1 mt-3">Options</h6>
           <ul className="list-unstyled">
-            <li className="cursor-pointer mb-1" onClick={() => deleteContact()}>
+            {/* <li className="cursor-pointer mb-1" onClick={deleteContact}>
               <Trash className="mr-50" size={17} />
               <span className="align-middle">Delete Contact</span>
-            </li>
-            <li className="cursor-pointer" onClick={() => blockContact()}>
+            </li> */}
+            <li className="cursor-pointer" onClick={blockContact}>
               <Slash className="mr-50" size={17} />
               <span className="align-middle">Block Contact</span>
             </li>
