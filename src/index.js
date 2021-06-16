@@ -38,7 +38,7 @@ import "./@core/assets/fonts/feather/iconfont.css"
 import "./@core/scss/core.scss"
 import "./assets/scss/style.scss"
 
-//Custom style 
+//Custom style
 import "./assets/css/style.css"
 
 // ** Service Worker
@@ -46,24 +46,28 @@ import * as serviceWorker from "./serviceWorker"
 import Amplify from "aws-amplify"
 import aws_exports from "./aws-exports"
 
+import SimpleReactLightbox from "simple-react-lightbox"
+
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"))
 Amplify.configure(aws_exports)
 
 ReactDOM.render(
-	<Provider store={store}>
-		<Suspense fallback={<Spinner />}>
-			<AbilityContext.Provider value={ability}>
-				<ThemeContext>
-					<IntlProviderWrapper>
-						<LazyApp />
-						<ToastContainer newestOnTop />
-					</IntlProviderWrapper>
-				</ThemeContext>
-			</AbilityContext.Provider>
-		</Suspense>
-	</Provider>,
-	document.getElementById("root")
+  <Provider store={store}>
+    <Suspense fallback={<Spinner />}>
+      <AbilityContext.Provider value={ability}>
+        <ThemeContext>
+          <IntlProviderWrapper>
+            <SimpleReactLightbox>
+              <LazyApp />
+            </SimpleReactLightbox>
+            <ToastContainer newestOnTop />
+          </IntlProviderWrapper>
+        </ThemeContext>
+      </AbilityContext.Provider>
+    </Suspense>
+  </Provider>,
+  document.getElementById("root")
 )
 
 // If you want your app to work offline and load faster, you can change

@@ -95,15 +95,16 @@ export const createContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -138,15 +139,16 @@ export const updateContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -181,15 +183,16 @@ export const deleteContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -208,9 +211,8 @@ export const createChat = /* GraphQL */ `
       id
       contactID
       message
-      time
-      senderID
       createdAt
+      senderID
       updatedAt
     }
   }
@@ -224,9 +226,8 @@ export const updateChat = /* GraphQL */ `
       id
       contactID
       message
-      time
-      senderID
       createdAt
+      senderID
       updatedAt
     }
   }
@@ -240,144 +241,8 @@ export const deleteChat = /* GraphQL */ `
       id
       contactID
       message
-      time
+      createdAt
       senderID
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createMessage = /* GraphQL */ `
-  mutation CreateMessage(
-    $input: CreateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    createMessage(input: $input, condition: $condition) {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateMessage = /* GraphQL */ `
-  mutation UpdateMessage(
-    $input: UpdateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    updateMessage(input: $input, condition: $condition) {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteMessage = /* GraphQL */ `
-  mutation DeleteMessage(
-    $input: DeleteMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    deleteMessage(input: $input, condition: $condition) {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createMediaGroup = /* GraphQL */ `
-  mutation CreateMediaGroup(
-    $input: CreateMediaGroupInput!
-    $condition: ModelMediaGroupConditionInput
-  ) {
-    createMediaGroup(input: $input, condition: $condition) {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateMediaGroup = /* GraphQL */ `
-  mutation UpdateMediaGroup(
-    $input: UpdateMediaGroupInput!
-    $condition: ModelMediaGroupConditionInput
-  ) {
-    updateMediaGroup(input: $input, condition: $condition) {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteMediaGroup = /* GraphQL */ `
-  mutation DeleteMediaGroup(
-    $input: DeleteMediaGroupInput!
-    $condition: ModelMediaGroupConditionInput
-  ) {
-    deleteMediaGroup(input: $input, condition: $condition) {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
       updatedAt
     }
   }
@@ -389,9 +254,11 @@ export const createMedia = /* GraphQL */ `
   ) {
     createMedia(input: $input, condition: $condition) {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }
@@ -404,9 +271,11 @@ export const updateMedia = /* GraphQL */ `
   ) {
     updateMedia(input: $input, condition: $condition) {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }
@@ -419,9 +288,11 @@ export const deleteMedia = /* GraphQL */ `
   ) {
     deleteMedia(input: $input, condition: $condition) {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }

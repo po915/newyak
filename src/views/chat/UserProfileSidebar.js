@@ -1,76 +1,147 @@
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from "@components/avatar"
 
 // ** Third Party Components
-import classnames from 'classnames'
-import PerfectScrollbar from 'react-perfect-scrollbar'
-import { X, Mail, PhoneCall, Clock, Tag, Star, Image, Trash, Slash } from 'react-feather'
+import classnames from "classnames"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import { X, Mail, PhoneCall, Trash, Slash } from "react-feather"
+import { useEffect, useState } from "react"
+import { API, graphqlOperation } from "aws-amplify"
+import * as queries from "@src/graphql/queries"
+import * as mutations from "@src/graphql/mutations"
 
-const UserProfileSidebar = props => {
+import { useSelector } from "react-redux"
+
+const UserProfileSidebar = (props) => {
   // ** Props
   const { user, handleUserSidebarRight, userSidebarRight } = props
+  const [myContact, setMyContact] = useState({})
+  const [yourContact, setYourContact] = useState({})
+
+  const currentUser = useSelector((state) => state.userinfo.userInfo)
+  const selectedUser = useSelector((state) => state.chat.selectedUser)
+
+  useEffect(() => {
+    getContact()
+  }, [])
+
+  function getContact() {
+    if (Object.keys(selectedUser).length) {
+      var filter_1 = {
+        ownerID: { eq: currentUser.id },
+        friendID: { eq: selectedUser.id },
+      }
+      API.graphql(
+        graphqlOperation(queries.listContacts, { filter: filter_1 })
+      ).then((res) => {
+        if (res.data.listContacts?.items[0])
+          setMyContact(res.data.listContacts?.items[0])
+      })
+      var filter = {
+        ownerID: { eq: selectedUser.id },
+        friendID: { eq: currentUser.id },
+      }
+      API.graphql(
+        graphqlOperation(queries.listContacts, { filter: filter })
+      ).then((res) => {
+        if (res.data.listContacts?.items[0])
+          setYourContact(res.data.listContacts?.items[0])
+      })
+    } else {
+      return false
+    }
+  }
+
+  const deleteContact = () => {
+    if (
+      Object.keys(myContact).length > 0 &&
+      Object.keys(yourContact).length > 0
+    ) {
+      API.graphql(
+        graphqlOperation(mutations.deleteContact, { id: myContact.id })
+      ).then((res) => console.log(res))
+      API.graphql(
+        graphqlOperation(mutations.deleteContact, { id: yourContact.id })
+      ).then((res) => console.log(res))
+    }
+  }
+
+  const blockContact = () => {
+    if (Object.keys(myContact).length > 0) {
+      alert("wfee")
+      const update = {
+        id: myContact.id,
+        accepted: "blocked",
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: update })
+      ).then((res) => console.log(res))
+    }
+  }
 
   return (
-    <div className={classnames('user-profile-sidebar', { show: userSidebarRight === true })}>
-      <header className='user-profile-header'>
-        <span className='close-icon' onClick={handleUserSidebarRight}>
+    <div
+      className={classnames("user-profile-sidebar", {
+        show: userSidebarRight === true,
+      })}>
+      <header className="user-profile-header">
+        <span className="close-icon" onClick={handleUserSidebarRight}>
           <X size={14} />
         </span>
-        <div className='header-profile-sidebar'>
-          <Avatar
-            className='box-shadow-1 avatar-border'
-            size='xl'
-            status={user.status}
-            img={user.avatar}
-            imgHeight='70'
-            imgWidth='70'
-          />
-          <h4 className='chat-user-name'>{user.fullName}</h4>
-          <span className='user-post'>{user.role}</span>
+        <div className="header-profile-sidebar">
+          {/* {Object.keys(selectedUser).length > 0 && selectedUser.avatar ? (
+            <Avatar
+              className="box-shadow-1 avatar-border"
+              size="xl"
+              status={selectedUser.status}
+              img={selectedUser.avatar}
+              imgHeight="70"
+              imgWidth="70"
+            />
+          ) : (
+            <Avatar
+              className="box-shadow-1 avatar-border"
+              size="xl"
+              content={selectedUser.name}
+              initials
+              color="light-primary"
+              status={selectedUser.status}
+              imgHeight="70"
+              imgWidth="70"
+            />
+          )} */}
+
+          <h4 className="chat-user-name">{selectedUser.name}</h4>
         </div>
       </header>
-      <PerfectScrollbar className='user-profile-sidebar-area' options={{ wheelPropagation: false }}>
-        <h6 className='section-label mb-1'>About</h6>
-        <p>{user.about}</p>
-        <div className='personal-info'>
-          <h6 className='section-label mb-1 mt-3'>Personal Information</h6>
-          <ul className='list-unstyled'>
-            <li className='mb-1'>
-              <Mail className='mr-50' size={17} />
-              <span className='align-middle'>lucifer@email.com</span>
+      <PerfectScrollbar
+        className="user-profile-sidebar-area"
+        options={{ wheelPropagation: false }}>
+        <h6 className="section-label mb-1">About</h6>
+        <p>{selectedUser.bio}</p>
+        <div className="personal-info">
+          <h6 className="section-label mb-1 mt-3">Personal Information</h6>
+          <ul className="list-unstyled">
+            <li className="mb-1">
+              <Mail className="mr-50" size={17} />
+              <span className="align-middle">{selectedUser.email}</span>
             </li>
-            <li className='mb-1'>
-              <PhoneCall className='mr-50' size={17} />
-              <span className='align-middle'> +1(123) 456 - 7890</span>
-            </li>
-            <li>
-              <Clock className='mr-50' size={17} />
-              <span className='align-middle'> Mon - Fri 10AM - 8PM</span>
+            <li className="mb-1">
+              <PhoneCall className="mr-50" size={17} />
+              <span className="align-middle">{selectedUser.phone}</span>
             </li>
           </ul>
         </div>
-        <div className='more-options'>
-          <h6 className='section-label mb-1 mt-3'>Options</h6>
-          <ul className='list-unstyled'>
-            <li className='cursor-pointer mb-1'>
-              <Tag className='mr-50' size={17} />
-              <span className='align-middle'> Add Tag</span>
+        <div className="more-options">
+          <h6 className="section-label mb-1 mt-3">Options</h6>
+          <ul className="list-unstyled">
+            <li className="cursor-pointer mb-1" onClick={() => deleteContact()}>
+              <Trash className="mr-50" size={17} />
+              <span className="align-middle">Delete Contact</span>
             </li>
-            <li className='cursor-pointer mb-1'>
-              <Star className='mr-50' size={17} />
-              <span className='align-middle'> Important Contact</span>
-            </li>
-            <li className='cursor-pointer mb-1'>
-              <Image className='mr-50' size={17} />
-              <span className='align-middle'> Shared Media</span>
-            </li>
-            <li className='cursor-pointer mb-1'>
-              <Trash className='mr-50' size={17} />
-              <span className='align-middle'> Delete Contact</span>
-            </li>
-            <li className='cursor-pointer'>
-              <Slash className='mr-50' size={17} />
-              <span className='align-middle'>Block Contact</span>
+            <li className="cursor-pointer" onClick={() => blockContact()}>
+              <Slash className="mr-50" size={17} />
+              <span className="align-middle">Block Contact</span>
             </li>
           </ul>
         </div>

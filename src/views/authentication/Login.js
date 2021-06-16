@@ -22,7 +22,6 @@ import {
   Input,
   FormGroup,
   Label,
-  CustomInput,
   Button,
 } from "reactstrap"
 
@@ -30,11 +29,8 @@ import logo from "@src/assets/images/logo/main-logo.png"
 
 import "@styles/base/pages/page-auth.scss"
 import { setUserInfo } from "@src/redux/actions/userinfo"
-import { css } from "@emotion/react"
-import ClipLoader from "react-spinners"
 
 import LoadingOverlay from "react-loading-overlay"
-import { height } from "dom-helpers"
 
 import Swal from "sweetalert2/dist/sweetalert2.js"
 import "sweetalert2/src/sweetalert2.scss"

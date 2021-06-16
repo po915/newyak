@@ -20,7 +20,6 @@ import loadingImg from "@src/assets/images/icons/loading.svg"
 
 const BlogList = () => {
 	const [data, setData] = useState(null)
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 
 	useEffect(async () => {
 		const articles = await API.graphql(graphqlOperation(queries.articleByStatus, { status: "published" }))
@@ -33,7 +32,6 @@ const BlogList = () => {
 
 	const renderRenderList = () => {
 		return data.map((item) => {
-			var editorAvatar = baseImageURL + item.owner.avatar
 
 			return (
 				<Col key={item.id} md="6">
@@ -41,7 +39,7 @@ const BlogList = () => {
 						<Link to={`/blog/detail/${item.id}`}>
 							<CardImg
 								className="img-fluid articleCardImg"
-								src={item.coverImg ? baseImageURL + item.coverImg : defaultCoverImg}
+								src={item.coverImg ? item.coverImg : defaultCoverImg}
 								alt={item.title}
 								top
 							/>
@@ -53,8 +51,8 @@ const BlogList = () => {
 								</Link>
 							</CardTitle>
 							<Media>
-								{editorAvatar ? (
-									<Avatar className="mr-50" img={editorAvatar} color="light-primary" imgHeight="24" imgWidth="24" />
+								{item.owner.avatar ? (
+									<Avatar className="mr-50" img={item.owner.avatar} color="light-primary" imgHeight="24" imgWidth="24" />
 								) : (
 									<Avatar
 										className="mr-50"
@@ -100,53 +98,6 @@ const BlogList = () => {
 						{data !== null ? (
 							<div className="blog-list-wrapper">
 								<Row>{renderRenderList()}</Row>
-								{/* <Row>
-									<Col sm="12">
-										<Pagination className="d-flex justify-content-center mt-2">
-											<PaginationItem className="prev-item">
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}></PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													1
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													2
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													3
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem active>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													4
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													5
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													6
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem>
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}>
-													7
-												</PaginationLink>
-											</PaginationItem>
-											<PaginationItem className="next-item">
-												<PaginationLink href="#" onClick={(e) => e.preventDefault()}></PaginationLink>
-											</PaginationItem>
-										</Pagination>
-									</Col>
-								</Row> */}
 							</div>
 						) : (
 							<div className="show">

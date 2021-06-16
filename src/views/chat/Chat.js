@@ -1,31 +1,21 @@
 // ** React Imports
 import { useState, useEffect, useRef } from "react"
 import ReactDOM from "react-dom"
-
 // ** Custom Components
 import Avatar from "@components/avatar"
-
 // ** Store & Actions
-import { useDispatch, useSelector } from "react-redux"
-import { sendMsg } from "./store/actions"
-
+import { useSelector } from "react-redux"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import {
   MessageSquare,
   Menu,
-  Search,
-  MoreVertical,
-  Mic,
+  Smile,
   Image,
   Send,
 } from "react-feather"
 import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Form,
   Label,
   InputGroup,
@@ -55,9 +45,9 @@ const ChatLog = (props) => {
   const [newMessage, setNewMessage] = useState("")
 
   useEffect(() => {
-    if (Object.keys(selectedUser).length) {
+    if (Object.keys(selectedUser).length > 0) {
       var isOldContact = getContact()
-      if(!isOldContact) {
+      if (!isOldContact) {
         setChatLog([])
         setMyContact({})
         setYourContact({})
@@ -66,8 +56,7 @@ const ChatLog = (props) => {
   }, [selectedUser])
 
   useEffect(() => {
-    if(Object.keys(myContact).length)
-    getChatLog()
+    if (Object.keys(myContact).length) getChatLog()
   }, [myContact])
 
   // get myContact and yourcontact
@@ -80,7 +69,8 @@ const ChatLog = (props) => {
       API.graphql(
         graphqlOperation(queries.listContacts, { filter: filter_1 })
       ).then((res) => {
-        if(res.data.listContacts?.items[0]) setMyContact(res.data.listContacts?.items[0])
+        if (res.data.listContacts?.items[0])
+          setMyContact(res.data.listContacts?.items[0])
       })
       var filter = {
         ownerID: { eq: selectedUser.id },
@@ -89,7 +79,8 @@ const ChatLog = (props) => {
       API.graphql(
         graphqlOperation(queries.listContacts, { filter: filter })
       ).then((res) => {
-        if(res.data.listContacts?.items[0]) setYourContact(res.data.listContacts?.items[0])
+        if (res.data.listContacts?.items[0])
+          setYourContact(res.data.listContacts?.items[0])
       })
     } else {
       return false
@@ -101,7 +92,6 @@ const ChatLog = (props) => {
       API.graphql(
         graphqlOperation(queries.chatByContact, { contactID: myContact.id })
       ).then((res) => {
-        console.log("setChatlog-2")
         setChatLog([...res.data.chatByContact.items])
       })
     }
@@ -127,13 +117,13 @@ const ChatLog = (props) => {
     let chatMessagesenderID = chatLog[0] ? chatLog[0].senderID : undefined
     let msgGroup = {
       senderID: chatMessagesenderID,
+
       messages: [],
     }
     chatLog.forEach((msg, index) => {
       if (chatMessagesenderID === msg.senderID) {
         msgGroup.messages.push({
           msg: msg.message,
-          time: msg.time,
         })
       } else {
         chatMessagesenderID = msg.senderID
@@ -143,7 +133,6 @@ const ChatLog = (props) => {
           messages: [
             {
               msg: msg.message,
-              time: msg.time,
             },
           ],
         }
@@ -163,9 +152,9 @@ const ChatLog = (props) => {
             "chat-left": item.senderID !== currentUser.id,
           })}>
           <div className="chat-avatar">
-            {/* {currentUser.avatar ? (
+            {currentUser.avatar && selectedUser.avatar ? (
               <Avatar
-                className="box-shadow-1 cursor-pointer"
+                className="cursor-pointer"
                 img={
                   item.senderID === currentUser.id
                     ? currentUser.avatar
@@ -175,23 +164,16 @@ const ChatLog = (props) => {
             ) : (
               <Avatar
                 className="box-shadow-1 cursor-pointer"
-                img={
+                content={
                   item.senderID === currentUser.id
-                    ? currentUser.avatar
-                    : selectedUser.avatar
+                    ? currentUser.name
+                    : selectedUser.name
                 }
+                initials
+                color="light-primary"
               />
             )}
-            <Avatar
-              className="box-shadow-1 cursor-pointer"
-              img={
-                item.senderID === currentUser.id
-                  ? currentUser.avatar
-                  : selectedUser.avatar
-              }
-            /> */}
           </div>
-
           <div className="chat-body">
             {item.messages.map((chat) => (
               <div key={chat.msg} className="chat-content">
@@ -221,61 +203,14 @@ const ChatLog = (props) => {
     }
   }
 
-  function addNewContact() {
-    const myNewContact = {
-      ownerID: currentUser.id,
-      friendID: selectedUser.id,
-    }
-    const yourNewConctact = {
-      ownerID: selectedUser.id,
-      friendID: currentUser.id,
-    }
-    // add new message to my contact
-    API.graphql(
-      graphqlOperation(mutations.createContact, { input: myNewContact })
-    ).then((res) => {
-      setMyContact(res.data.createContact)
-      var now = new Date()
-      var time = now.toISOString()
-      const newMsg = {
-        contactID: res.data.createContact.id,
-        message: newMessage,
-        time: time,
-        senderID: currentUser.id,
-      }
-      API.graphql(
-        graphqlOperation(mutations.createChat, { input: newMsg })
-      ).then((res) => {
-        setNewMessage("")
-        document.getElementById("new_msg").value = ""
-      })
-    })
-    // add new message to your contact
-    API.graphql(
-      graphqlOperation(mutations.createContact, { input: yourNewConctact })
-    ).then((res) => {
-      var now = new Date()
-      var time = now.toISOString()
-      const newMsg = {
-        contactID: res.data.createContact.id,
-        message: newMessage,
-        time: time,
-        senderID: currentUser.id,
-      }
-      setYourContact(res.data.createContact)
-      API.graphql(graphqlOperation(mutations.createChat, { input: newMsg }))
-    })
-  }
-
-
   useEffect(() => {
     if (Object.keys(updateMsg).length && myContact) {
       if (updateMsg?.contactID == myContact?.id) {
-        console.log("setChatlog-1")
         setChatLog([...chatLog, updateMsg])
       }
     }
   }, [updateMsg])
+  // subcription onCreateChat
   useEffect(() => {
     const subscription = API.graphql(
       graphqlOperation(subscriptions.onCreateChat)
@@ -292,33 +227,211 @@ const ChatLog = (props) => {
   const sendMessage = (e) => {
     e.preventDefault()
     if (newMessage) {
-      if (chatLog.length > 0) {
-        var now = new Date()
-        var time = now.toISOString()
-        const newMsg = {
-          contactID: myContact.id,
-          message: newMessage,
-          time: time,
-          senderID: currentUser.id,
-        }
-        document.getElementById("new_msg").value = ""
-        API.graphql(
-          graphqlOperation(mutations.createChat, { input: newMsg })
-        ).then((res) => {
-          setNewMessage("")
-        })
-        const newYourMsg = {
-          contactID: yourContact?.id,
-          message: newMessage,
-          time: time,
-          senderID: currentUser.id,
-        }
-        API.graphql(
-          graphqlOperation(mutations.createChat, { input: newYourMsg })
-        )
-      } else {
-        addNewContact()
+      // if (chatLog.length > 0) {
+      const newMsg = {
+        contactID: myContact.id,
+        message: newMessage,
+        senderID: currentUser.id,
       }
+      document.getElementById("new_msg").value = ""
+      API.graphql(
+        graphqlOperation(mutations.createChat, { input: newMsg })
+      ).then((res) => {
+        setNewMessage("")
+      })
+      // add new message to your contact
+      const newYourMsg = {
+        contactID: yourContact?.id,
+        message: newMessage,
+        senderID: currentUser.id,
+      }
+      API.graphql(graphqlOperation(mutations.createChat, { input: newYourMsg }))
+      // set unreadmessages to your contact
+      const setUnread = {
+        id: yourContact.id,
+        unseenMsgs: true,
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: setUnread })
+      )
+      // } else {
+      //   addNewContact()
+      // }
+    }
+  }
+
+  const onInputFocus = (e) => {
+    const setUnread = {
+      id: myContact.id,
+      unseenMsgs: false,
+    }
+    API.graphql(graphqlOperation(mutations.updateContact, { input: setUnread }))
+  }
+
+  const acceptInvite = () => {
+    if (myContact?.id) {
+      const accept = {
+        id: myContact.id,
+        accepted: "yes",
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: accept })
+      ).then((res) => {
+        setMyContact(res.data.updateContact)
+      })
+    }
+  }
+
+  const sendInvite = () => {
+    if (Object.keys(selectedUser).length > 0) {
+      const myNewContact = {
+        ownerID: currentUser.id,
+        friendID: selectedUser.id,
+        accepted: "yes",
+      }
+      const yourNewContact = {
+        ownerID: selectedUser.id,
+        friendID: currentUser.id,
+        unseenMsgs: true,
+        accepted: "pending",
+      }
+      API.graphql(
+        graphqlOperation(mutations.createContact, { input: myNewContact })
+      ).then((res) => {
+        setMyContact(res.data.createContact)
+      })
+      API.graphql(
+        graphqlOperation(mutations.createContact, { input: yourNewContact })
+      ).then((res) => {
+        setYourContact(res.data.createContact)
+      })
+    }
+  }
+
+  const chatMain = () => {
+    // before accept
+    if (yourContact.accepted == "pending" && myContact.accepted == "yes") {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            <div className="box-1">
+              <Button color="primary">Waiting Acceptance</Button>
+            </div>
+          </ChatWrapper>
+          <Form className="chat-app-form"></Form>
+        </>
+      )
+    }
+    // accepted
+    if (yourContact.accepted == "yes" && myContact.accepted == "yes") {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            {chatLog ? <div className="chats">{renderChats()}</div> : null}
+          </ChatWrapper>
+          <Form className="chat-app-form" onSubmit={(e) => sendMessage(e)}>
+            <InputGroup className="input-group-merge mr-1 form-send-message">
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText>
+                  <Smile className="cursor-pointer" size={14} />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                id="new_msg"
+                autoComplete="false"
+                onFocus={(e) => onInputFocus(e)}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Message here..."
+              />
+              <InputGroupAddon addonType="append">
+                <InputGroupText>
+                  <Label className="attachment-icon mb-0" for="attach-doc">
+                    <Image
+                      className="cursor-pointer text-secondary"
+                      size={14}
+                    />
+                    <input type="file" id="attach-doc" hidden />
+                  </Label>
+                </InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
+            <Button className="send" color="primary">
+              <Send size={14} className="d-lg-none" />
+              <span className="d-none d-lg-block">Send</span>
+            </Button>
+          </Form>
+        </>
+      )
+    }
+    // denined
+    if (yourContact.accepted == "blocked" || myContact.accepted == "blocked") {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            <div className="box-1">
+              <Button
+                color="primary"
+                className="mr-1">
+                Blocked
+              </Button>
+            </div>
+          </ChatWrapper>
+          <Form className="chat-app-form"></Form>
+        </>
+      )
+    }
+    // accept
+    if (myContact.accepted == "pending" && yourContact.accepted == "yes") {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            <div className="box-1">
+              <Button
+                color="primary"
+                className="mr-1"
+                onClick={() => acceptInvite()}>
+                Accept
+              </Button>
+            </div>
+          </ChatWrapper>
+          <Form className="chat-app-form"></Form>
+        </>
+      )
+    }
+    //blank
+    if (Object.keys(selectedUser).length > 0) {
+      return (
+        <>
+          <ChatWrapper
+            ref={chatArea}
+            className="user-chats"
+            options={{ wheelPropagation: false }}>
+            <div className="box-1">
+              <Button
+                color="primary"
+                className="mr-1"
+                onClick={() => sendInvite()}>
+                Say Hi
+              </Button>
+            </div>
+          </ChatWrapper>
+          <Form
+            className="chat-app-form"
+            onSubmit={(e) => sendMessage(e)}></Form>
+        </>
+      )
     }
   }
 
@@ -376,67 +489,10 @@ const ChatLog = (props) => {
                 )}
                 <h6 className="mb-0">{selectedUser.name}</h6>
               </div>
-              <div className="d-flex align-items-center">
-                <Search
-                  size={18}
-                  className="cursor-pointer d-sm-block d-none"
-                />
-                <UncontrolledDropdown>
-                  <DropdownToggle
-                    className="btn-icon"
-                    color="transparent"
-                    size="sm">
-                    <MoreVertical size="18" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem href="/" onClick={(e) => e.preventDefault()}>
-                      Block Contact
-                    </DropdownItem>
-                    <DropdownItem href="/" onClick={(e) => e.preventDefault()}>
-                      Clear Chat
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </div>
             </header>
           </div>
 
-          <ChatWrapper
-            ref={chatArea}
-            className="user-chats"
-            options={{ wheelPropagation: false }}>
-            {chatLog ? <div className="chats">{renderChats()}</div> : null}
-          </ChatWrapper>
-
-          <Form className="chat-app-form" onSubmit={(e) => sendMessage(e)}>
-            <InputGroup className="input-group-merge mr-1 form-send-message">
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText>
-                  <Mic className="cursor-pointer" size={14} />
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input
-                id="new_msg"
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Message here..."
-              />
-              <InputGroupAddon addonType="append">
-                <InputGroupText>
-                  <Label className="attachment-icon mb-0" for="attach-doc">
-                    <Image
-                      className="cursor-pointer text-secondary"
-                      size={14}
-                    />
-                    <input type="file" id="attach-doc" hidden />
-                  </Label>
-                </InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-            <Button className="send" color="primary">
-              <Send size={14} className="d-lg-none" />
-              <span className="d-none d-lg-block">Send</span>
-            </Button>
-          </Form>
+          {chatMain()}
         </div>
       ) : null}
     </div>

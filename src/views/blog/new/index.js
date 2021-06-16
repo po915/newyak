@@ -68,9 +68,8 @@ const BlogEdit = () => {
 		const realContent = draftToHtml(convertToRaw(content.getCurrentContent()))
 		S3FileUpload.uploadFile(coverImg, S3config)
 			.then((res) => {
-				console.log(res)
 				const input = {
-					coverImg: coverImgName,
+					coverImg: res.location,
 					title: title,
 					content: realContent,
 					status: "published",
@@ -78,8 +77,7 @@ const BlogEdit = () => {
 				}
 				API.graphql(graphqlOperation(mutations.createArticle, { input: input }))
 					.then((res) => {
-						console.log(res, "api update")
-						history.push("/pages/blog/list")
+						history.push("/blog/list")
 					})
 					.catch((err) => {
 						console.error(err, "api error")
@@ -94,9 +92,8 @@ const BlogEdit = () => {
 		const realContent = draftToHtml(convertToRaw(content.getCurrentContent()))
 		S3FileUpload.uploadFile(coverImg, S3config)
 			.then((res) => {
-				console.log(res)
 				const input = {
-					coverImg: coverImgName,
+					coverImg: res.location,
 					title: title,
 					content: realContent,
 					status: "draft",
@@ -104,8 +101,7 @@ const BlogEdit = () => {
 				}
 				API.graphql(graphqlOperation(mutations.createArticle, { input: input }))
 					.then((res) => {
-						console.log(res, "api update")
-						history.push("/pages/blog/draft")
+						history.push("/blog/draft")
 					})
 					.catch((err) => {
 						console.error(err, "api error")
@@ -117,7 +113,7 @@ const BlogEdit = () => {
 	}
 
 	const cancel = () => {
-		history.push("/pages/blog/all")
+		history.push("/blog/all")
 	}
 
 	return (

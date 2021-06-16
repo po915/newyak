@@ -32,7 +32,6 @@ const BlogDetails = (props) => {
 	const [replyData, setReplyData] = useState([])
 	const [showReply, setShowReply] = useState(false)
 	const id = props.match.params.id
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 	/////////////////////////////////
 	useEffect(async () => {
 		const article = await API.graphql(graphqlOperation(queries.getArticle, { id: id }))
@@ -44,7 +43,7 @@ const BlogDetails = (props) => {
 
 		setCommentData(rawComments.data?.commentByArticle?.items)
 		if (article.data.getArticle.owner.avatar) {
-			setAvatar(baseImageURL + article.data.getArticle.owner.avatar)
+			setAvatar(article.data.getArticle.owner.avatar)
 		}
 	}, [])
 	/////////////////////////////////////////
@@ -120,7 +119,7 @@ const BlogDetails = (props) => {
 	const renderComments = (comments) => {
 		return comments.map((comment) => {
 			var commenterName = comment.owner.name
-			var commenterAvatar = baseImageURL + comment.owner.avatar
+			var commenterAvatar = comment.owner.avatar
 
 			return (
 				<Card className="mb-3" key={comment.id}>
@@ -192,7 +191,7 @@ const BlogDetails = (props) => {
 							<Row>
 								<Col sm="12">
 									<Card className="mb-3">
-										<CardImg src={baseImageURL + data.coverImg} className="img-fluid" top />
+										<CardImg src={data.coverImg} className="img-fluid" top />
 										<CardBody>
 											<CardTitle tag="h4">{data.title}</CardTitle>
 											<Media>

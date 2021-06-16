@@ -1,25 +1,22 @@
-// ** React Imports
 import { useEffect, useState } from "react"
-
 // ** Custom Components
 import Avatar from "@components/avatar"
-
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux"
-import { selectChat } from "./store/actions"
-
-// ** Utils
-import { formatDateToMonthShort } from "@utils"
-
 //AWS
-import { actionButton, API, graphqlOperation, sceneActions } from "aws-amplify"
+import { API, graphqlOperation } from "aws-amplify"
 import * as mutations from "@src/graphql/mutations"
 import * as queries from "@src/graphql/queries"
+import * as subscriptions from "@src/graphql/subscriptions"
 
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { X, Search, CheckSquare, Bell, User, Trash } from "react-feather"
+import {
+  X,
+  Search,
+  Bell,
+} from "react-feather"
 import {
   CardText,
   InputGroup,
@@ -50,23 +47,57 @@ const SidebarLeft = (props) => {
   const [status, setStatus] = useState("online")
   const [filteredContacts, setFilteredContacts] = useState([])
 
-  const [contacts, setContacts] = useState([])
+  // const [contacts, setContacts] = useState([])
+  const contacts = useSelector((state) => state.chat.contacts)
+
+  const [allUsers, setAllUsers] = useState()
+
   const [newContacts, setNewContacts] = useState([])
 
   const currentUser = useSelector((state) => state.userinfo.userInfo)
   // ** Handles User Chat Click
 
   useEffect(() => {
+    getContact()
+    getAllUsers()
+  }, [])
+
+  const getAllUsers = () => {
+    API.graphql(graphqlOperation(queries.listUserinfos)).then((res) => {
+      setAllUsers(res.data.listUserinfos.items)
+    })
+  }
+
+  const getContact = () => {
     API.graphql(
       graphqlOperation(queries.listContacts, {
         filter: { ownerID: { eq: currentUser.id } },
       })
     ).then((res) => {
-      setContacts(res.data.listContacts.items)
+      dispatch({ type: "GET_CONTACTS", data: res.data.listContacts.items })
     })
-  }, [])
+  }
 
-  const handleUserClick = (userinfo) => {
+  useEffect(() => {
+    renderContacts()
+  }, [contacts])
+
+  const handleUserClick = (contactID, userinfo) => {
+    if (contactID != "newContact") {
+      contacts.map((contact, index) => {
+        if (contact.id == contactID) {
+          contact.unseenMsgs = false
+          const contactUpdate = {
+            id: contactID,
+            unseenMsgs: false,
+          }
+          API.graphql(
+            graphqlOperation(mutations.updateContact, { input: contactUpdate })
+          )
+        }
+      })
+    }
+
     dispatch({ type: "SELECTED_USER", data: userinfo })
     setActive(userinfo.id)
     if (sidebar === true) {
@@ -90,10 +121,10 @@ const SidebarLeft = (props) => {
           return (
             <li
               className={classnames({
-                active: active == item.info.id,
+                active: active == item.info?.id,
               })}
               key={item.id}
-              onClick={() => handleUserClick(item.info)}>
+              onClick={() => handleUserClick(item.id, item.info)}>
               {item.info.avatar ? (
                 <Avatar img={item.info.avatar} imgHeight="42" imgWidth="42" />
               ) : (
@@ -108,9 +139,9 @@ const SidebarLeft = (props) => {
                 <h5 className="my-auto">{item.info.name}</h5>
               </div>
               <div className="chat-meta text-nowrap">
-                {item.unseenMsgs >= 1 ? (
+                {item.unseenMsgs ? (
                   <Badge className="float-right" color="danger" pill>
-                    {item.unseenMsgs}
+                    <Bell />
                   </Badge>
                 ) : null}
               </div>
@@ -129,6 +160,15 @@ const SidebarLeft = (props) => {
       contact.info.name.toLowerCase().includes(query.toLowerCase())
     const filteredContactssArr = contacts.filter(searchFilterFunction)
     setFilteredContacts([...filteredContactssArr])
+
+    // const searchUserFunction = (user) => {
+    //   user.name.toLowerCase().includes(query.toLowerCase())
+    // }
+    // if(allUsers) {
+    //   const filteredUsers = allUsers.filter(searchUserFunction)
+    //   setNewContacts([...filteredUsers])
+    // }
+
     searchNewContact()
   }, [query])
 
@@ -147,6 +187,29 @@ const SidebarLeft = (props) => {
     }
   }
 
+  // Subscription
+  useEffect(() => {
+    const onUpdateContact = API.graphql(
+      graphqlOperation(subscriptions.onUpdateContact)
+    ).subscribe({
+      next: (event) => {
+        getContact()
+      },
+    })
+
+    const onCreateContact = API.graphql(
+      graphqlOperation(subscriptions.onCreateContact)
+    ).subscribe({
+      next: (event) => {
+        getContact()
+      },
+    })
+    return () => {
+      onCreateContact.unsubscribe()
+      onUpdateContact.unsubscribe()
+    }
+  }, [])
+
   const renderNewContacts = () => {
     if (newContacts && newContacts.length) {
       return newContacts.map((item) => {
@@ -156,14 +219,13 @@ const SidebarLeft = (props) => {
               active: active == item.id,
             })}
             key={item.name}
-            onClick={() => handleUserClick(item)}>
+            onClick={() => handleUserClick("newContact", item)}>
             {item.avatar ? (
               <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
             ) : (
               <Avatar
                 content={item.name}
                 initials
-                color="light-primary"
                 imgHeight="42"
                 imgWidth="42"
               />

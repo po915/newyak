@@ -31,8 +31,6 @@ const BlogList = () => {
 		setVisiablity("hidden")
 	}, [])
 
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
-
 	const publish = (event, id) => {
 		event.target.innerHTML = "Pubish<i class='fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom'></i>"
 		const info = {
@@ -43,14 +41,16 @@ const BlogList = () => {
 		API.graphql(graphqlOperation(mutations.updateArticle, { input: info }))
 			.then((res) => {
 				console.log(res, "Article Publish res")
-				history.push("/pages/blog/list")
+				history.push("/blog/list")
 			})
 			.catch((err) => {
 				console.error(err, "Article Publish Err")
 			})
 	}
 
-	const editArticle = (id) => {}
+	const editArticle = (id) => {
+		history.push("/blog/edit/"+id)
+	}
 
 	const deleteArticle = (id) => {
 		const input = {
@@ -64,7 +64,7 @@ const BlogList = () => {
 			.catch((err) => {
 				console.log(err, "article delete result")
 			})
-		history.push("/pages/blog/draft")
+		history.push("/blog/draft")
 	}
 
 	return (
@@ -80,7 +80,7 @@ const BlogList = () => {
 								<Card>
 									<CardImg
 										top
-										src={item.coverImg ? baseImageURL + item.coverImg : defaultCoverImg}
+										src={item.coverImg ? item.coverImg : defaultCoverImg}
 										alt="Card cap"
 										className="articleCardImg"
 									/>

@@ -25,7 +25,9 @@ type Contact
   ownerID: ID
   friendID: ID
   info: Userinfo @connection(fields: ["friendID"])
-  unseenMsgs: Int
+  accepted: String
+  blocked: Boolean
+  unseenMsgs:Boolean
   chats: [Chat] @connection(keyName: "chatByContact", fields: ["id"])
 }
 
@@ -33,54 +35,31 @@ type Chat
 @model
 @key(
   name: "chatByContact",
-  fields: ["contactID", "time"],
+  fields: ["contactID", "createdAt"],
   queryField: "chatByContact"
 )
 {
   id: ID
   contactID: ID
   message: String
-  time: AWSDateTime
-  senderID: ID
-}
-
-type Message @model @searchable {
-  id: ID!
-  fromID: ID
-  toID: ID
-  content: String
-  attached: String
-  sendAt: AWSDateTime
-  readAt: AWSDateTime
-}
-
-type MediaGroup
-  @model
-  @key(
-    name: "mediaGroupByOwner"
-    fields: ["ownerID", "createdAt"]
-    queryField: "mediaGroupByOwner"
-  ) {
-  id: ID!
-  ownerID: ID!
-  title: String!
-  memo: String!
-  status: String!
-  medias: [Media] @connection(keyName: "mediaByGroup", fields: ["id"])
   createdAt: AWSDateTime
+  senderID: ID
 }
 
 type Media
   @model
   @key(
-    name: "mediaByGroup"
-    fields: ["groupID", "createdAt"]
-    queryField: "mediaByGroup"
-  ) {
+    name: "mediaByOwner"
+    fields: ["ownerID", "createdAt"]
+    queryField: "mediaByOwner"
+  )
+  {
   id: ID!
-  groupID: ID!
-  type: String!
-  path: String!
+  ownerID: ID
+  title: String
+  type: String
+  status: Boolean
+  url: String!
   createdAt: AWSDateTime
 }
 

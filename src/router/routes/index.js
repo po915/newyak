@@ -13,7 +13,7 @@ const Routes = [
 		exact: true,
 	},
 	{
-		path: "/profile",
+		path: "/user/:id",
 		component: lazy(() => import("../../views/profile")),
 		exact: true,
 	},
@@ -93,11 +93,11 @@ const Routes = [
 			navLink: "/blog/edit",
 		},
 	},
-	{
-		path: "/blog/edit",
-		exact: true,
-		component: () => <Redirect to="/blog/edit/1" />,
-	},
+	// {
+	// 	path: "/blog/edit",
+	// 	exact: true,
+	// 	component: () => <Redirect to="/blog/edit/1" />,
+	// },
 	{
 		path: "/blog/new",
 		exact: true,

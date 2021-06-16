@@ -83,15 +83,16 @@ export const onCreateContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -123,15 +124,16 @@ export const onUpdateContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -163,15 +165,16 @@ export const onDeleteContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -187,9 +190,8 @@ export const onCreateChat = /* GraphQL */ `
       id
       contactID
       message
-      time
-      senderID
       createdAt
+      senderID
       updatedAt
     }
   }
@@ -200,9 +202,8 @@ export const onUpdateChat = /* GraphQL */ `
       id
       contactID
       message
-      time
-      senderID
       createdAt
+      senderID
       updatedAt
     }
   }
@@ -213,126 +214,8 @@ export const onDeleteChat = /* GraphQL */ `
       id
       contactID
       message
-      time
+      createdAt
       senderID
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMessage = /* GraphQL */ `
-  subscription OnCreateMessage {
-    onCreateMessage {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMessage = /* GraphQL */ `
-  subscription OnUpdateMessage {
-    onUpdateMessage {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMessage = /* GraphQL */ `
-  subscription OnDeleteMessage {
-    onDeleteMessage {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMediaGroup = /* GraphQL */ `
-  subscription OnCreateMediaGroup {
-    onCreateMediaGroup {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMediaGroup = /* GraphQL */ `
-  subscription OnUpdateMediaGroup {
-    onUpdateMediaGroup {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMediaGroup = /* GraphQL */ `
-  subscription OnDeleteMediaGroup {
-    onDeleteMediaGroup {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
       updatedAt
     }
   }
@@ -341,9 +224,11 @@ export const onCreateMedia = /* GraphQL */ `
   subscription OnCreateMedia {
     onCreateMedia {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }
@@ -353,9 +238,11 @@ export const onUpdateMedia = /* GraphQL */ `
   subscription OnUpdateMedia {
     onUpdateMedia {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }
@@ -365,9 +252,11 @@ export const onDeleteMedia = /* GraphQL */ `
   subscription OnDeleteMedia {
     onDeleteMedia {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }

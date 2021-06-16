@@ -70,15 +70,16 @@ export const getContact = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      accepted
+      blocked
       unseenMsgs
       chats {
         items {
           id
           contactID
           message
-          time
-          senderID
           createdAt
+          senderID
           updatedAt
         }
         nextToken
@@ -115,15 +116,16 @@ export const listContacts = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        accepted
+        blocked
         unseenMsgs
         chats {
           items {
             id
             contactID
             message
-            time
-            senderID
             createdAt
+            senderID
             updatedAt
           }
           nextToken
@@ -141,9 +143,8 @@ export const getChat = /* GraphQL */ `
       id
       contactID
       message
-      time
-      senderID
       createdAt
+      senderID
       updatedAt
     }
   }
@@ -159,101 +160,8 @@ export const listChats = /* GraphQL */ `
         id
         contactID
         message
-        time
+        createdAt
         senderID
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getMessage = /* GraphQL */ `
-  query GetMessage($id: ID!) {
-    getMessage(id: $id) {
-      id
-      fromID
-      toID
-      content
-      attached
-      sendAt
-      readAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMessages = /* GraphQL */ `
-  query ListMessages(
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        fromID
-        toID
-        content
-        attached
-        sendAt
-        readAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getMediaGroup = /* GraphQL */ `
-  query GetMediaGroup($id: ID!) {
-    getMediaGroup(id: $id) {
-      id
-      ownerID
-      title
-      memo
-      status
-      medias {
-        items {
-          id
-          groupID
-          type
-          path
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMediaGroups = /* GraphQL */ `
-  query ListMediaGroups(
-    $filter: ModelMediaGroupFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMediaGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        ownerID
-        title
-        memo
-        status
-        medias {
-          items {
-            id
-            groupID
-            type
-            path
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
-        createdAt
         updatedAt
       }
       nextToken
@@ -264,9 +172,11 @@ export const getMedia = /* GraphQL */ `
   query GetMedia($id: ID!) {
     getMedia(id: $id) {
       id
-      groupID
+      ownerID
+      title
       type
-      path
+      status
+      url
       createdAt
       updatedAt
     }
@@ -281,9 +191,11 @@ export const listMedias = /* GraphQL */ `
     listMedias(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        groupID
+        ownerID
+        title
         type
-        path
+        status
+        url
         createdAt
         updatedAt
       }
@@ -645,15 +557,16 @@ export const contactByUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        accepted
+        blocked
         unseenMsgs
         chats {
           items {
             id
             contactID
             message
-            time
-            senderID
             createdAt
+            senderID
             updatedAt
           }
           nextToken
@@ -668,7 +581,7 @@ export const contactByUser = /* GraphQL */ `
 export const chatByContact = /* GraphQL */ `
   query ChatByContact(
     $contactID: ID
-    $time: ModelStringKeyConditionInput
+    $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelChatFilterInput
     $limit: Int
@@ -676,7 +589,7 @@ export const chatByContact = /* GraphQL */ `
   ) {
     chatByContact(
       contactID: $contactID
-      time: $time
+      createdAt: $createdAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -686,25 +599,24 @@ export const chatByContact = /* GraphQL */ `
         id
         contactID
         message
-        time
-        senderID
         createdAt
+        senderID
         updatedAt
       }
       nextToken
     }
   }
 `;
-export const mediaGroupByOwner = /* GraphQL */ `
-  query MediaGroupByOwner(
+export const mediaByOwner = /* GraphQL */ `
+  query MediaByOwner(
     $ownerID: ID
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
-    $filter: ModelMediaGroupFilterInput
+    $filter: ModelMediaFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    mediaGroupByOwner(
+    mediaByOwner(
       ownerID: $ownerID
       createdAt: $createdAt
       sortDirection: $sortDirection
@@ -716,48 +628,9 @@ export const mediaGroupByOwner = /* GraphQL */ `
         id
         ownerID
         title
-        memo
-        status
-        medias {
-          items {
-            id
-            groupID
-            type
-            path
-            createdAt
-            updatedAt
-          }
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const mediaByGroup = /* GraphQL */ `
-  query MediaByGroup(
-    $groupID: ID
-    $createdAt: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelMediaFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    mediaByGroup(
-      groupID: $groupID
-      createdAt: $createdAt
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        groupID
         type
-        path
+        status
+        url
         createdAt
         updatedAt
       }
@@ -1068,37 +941,6 @@ export const searchUserinfos = /* GraphQL */ `
         website
         country
         status
-        createdAt
-        updatedAt
-      }
-      nextToken
-      total
-    }
-  }
-`;
-export const searchMessages = /* GraphQL */ `
-  query SearchMessages(
-    $filter: SearchableMessageFilterInput
-    $sort: SearchableMessageSortInput
-    $limit: Int
-    $nextToken: String
-    $from: Int
-  ) {
-    searchMessages(
-      filter: $filter
-      sort: $sort
-      limit: $limit
-      nextToken: $nextToken
-      from: $from
-    ) {
-      items {
-        id
-        fromID
-        toID
-        content
-        attached
-        sendAt
-        readAt
         createdAt
         updatedAt
       }

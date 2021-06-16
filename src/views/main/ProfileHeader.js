@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux"
 
 const ProfileHeader = ({ data }) => {
 	const [isOpen, setIsOpen] = useState(false)
-	const baseImageURL = "https://yakbucket104727-dev.s3.amazonaws.com/image/"
 	const [activeTab, setActiveTab] = useState("feed")
 	const history = useHistory()
 	const dispatch = useDispatch()
@@ -27,14 +26,14 @@ const ProfileHeader = ({ data }) => {
 			{data.banner ? (
 				<CardImg src={data.banner} alt="User Profile Image" top />
 			) : (
-				<CardImg src="https://picsum.photos/900/200" alt="User Profile Image" top />
+				<CardImg src={defaultBanner} alt="User Profile Image" top />
 			)}
 
 			<div className="position-relative">
 				<div className="profile-img-container d-flex align-items-center">
 					<div className="profile-img">
 						{data.avatar ? (
-							<img className="rounded img-fluid" src={baseImageURL + data.avatar} alt="Card image" />
+							<img className="rounded img-fluid" src={data.avatar} alt="Card image" />
 						) : (
 							<img className="rounded img-fluid" src={defaultAvatar} alt="Card image" />
 						)}
