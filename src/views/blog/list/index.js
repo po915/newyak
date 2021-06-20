@@ -73,7 +73,7 @@ const BlogList = () => {
 				<img src={loadingImg} className="loadingIcon" />
 			</div>
 			<h2>Your published articles.</h2>
-			{articleData ? (
+			{articleData.length > 0 ? (
 				<Row className="match-height">
 					{articleData.map((item, index) => {
 						return (
@@ -119,7 +119,7 @@ const BlogList = () => {
 					})}
 				</Row>
 			) : (
-				<div></div>
+				<p>You have no published article yet. Please add new.</p>
 			)}
 		</Fragment>
 	)

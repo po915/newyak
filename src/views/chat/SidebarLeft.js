@@ -12,19 +12,15 @@ import * as subscriptions from "@src/graphql/subscriptions"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
+import { X, Search, Bell } from "react-feather"
 import {
-  X,
-  Search,
-  Bell,
-} from "react-feather"
-import {
+  Form,
   CardText,
   InputGroup,
   InputGroupAddon,
   Input,
   InputGroupText,
   Badge,
-  CustomInput,
   Button,
 } from "reactstrap"
 
@@ -34,8 +30,6 @@ const SidebarLeft = (props) => {
     store,
     sidebar,
     handleSidebar,
-    userSidebarLeft,
-    handleUserSidebarLeft,
   } = props
 
   // ** Dispatch
@@ -44,29 +38,16 @@ const SidebarLeft = (props) => {
   // ** State
   const [query, setQuery] = useState("")
   const [active, setActive] = useState({})
-  const [status, setStatus] = useState("online")
   const [filteredContacts, setFilteredContacts] = useState([])
-
-  // const [contacts, setContacts] = useState([])
-  const contacts = useSelector((state) => state.chat.contacts)
-
-  const [allUsers, setAllUsers] = useState()
-
   const [newContacts, setNewContacts] = useState([])
 
+  const contacts = useSelector((state) => state.chat.contacts)
   const currentUser = useSelector((state) => state.userinfo.userInfo)
   // ** Handles User Chat Click
 
   useEffect(() => {
     getContact()
-    getAllUsers()
   }, [])
-
-  const getAllUsers = () => {
-    API.graphql(graphqlOperation(queries.listUserinfos)).then((res) => {
-      setAllUsers(res.data.listUserinfos.items)
-    })
-  }
 
   const getContact = () => {
     API.graphql(
@@ -161,19 +142,10 @@ const SidebarLeft = (props) => {
       contact.info.name.toLowerCase().includes(query.toLowerCase())
     const filteredContactssArr = contacts.filter(searchFilterFunction)
     setFilteredContacts([...filteredContactssArr])
-
-    // const searchUserFunction = (user) => {
-    //   user.name.toLowerCase().includes(query.toLowerCase())
-    // }
-    // if(allUsers) {
-    //   const filteredUsers = allUsers.filter(searchUserFunction)
-    //   setNewContacts([...filteredUsers])
-    // }
-
-    searchNewContact()
   }, [query])
 
-  const searchNewContact = () => {
+  const searchNewContact = (e) => {
+    e.preventDefault()
     if (query.length > 0) {
       var search = {
         or: [{ id: { eq: query } }, { name: { matchPhrasePrefix: query } }],
@@ -214,29 +186,31 @@ const SidebarLeft = (props) => {
   const renderNewContacts = () => {
     if (newContacts && newContacts.length) {
       return newContacts.map((item) => {
-        return (
-          <li
-            className={classnames({
-              active: active == item.id,
-            })}
-            key={item.name}
-            onClick={() => handleUserClick("newContact", item)}>
-            {item.avatar ? (
-              <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
-            ) : (
-              <Avatar
-                content={item.name}
-                initials
-                imgHeight="42"
-                imgWidth="42"
-              />
-            )}
-            <div className="chat-info flex-grow-1">
-              <h5 className="mb-0">{item.name}</h5>
-              <CardText className="text-truncate">{item.bio}</CardText>
-            </div>
-          </li>
-        )
+        if (item.id != currentUser.id) {
+          return (
+            <li
+              className={classnames({
+                active: active == item.id,
+              })}
+              key={item.name}
+              onClick={() => handleUserClick("newContact", item)}>
+              {item.avatar ? (
+                <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
+              ) : (
+                <Avatar
+                  content={item.name}
+                  initials
+                  imgHeight="42"
+                  imgWidth="42"
+                />
+              )}
+              <div className="chat-info flex-grow-1">
+                <h5 className="mb-0">{item.name}</h5>
+                <CardText className="text-truncate">{item.bio}</CardText>
+              </div>
+            </li>
+          )
+        }
       })
     } else {
       return null
@@ -254,20 +228,23 @@ const SidebarLeft = (props) => {
             <X size={14} />
           </div>
           <div className="chat-fixed-search">
-            <div className="d-flex align-items-center w-100">
-              <InputGroup className="input-group-merge w-100">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText className="round">
-                    <Search className="text-muted" size={14} />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  className="round"
-                  placeholder="Search or start a new chat"
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-              </InputGroup>
-            </div>
+            <Form onSubmit={searchNewContact}>
+              <div className="d-flex align-items-center w-100 pt-1">
+                <InputGroup className="input-group-merge w-100">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText className="round">
+                      <Search className="text-muted" size={14} />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    className="round"
+                    placeholder="Search your friends..."
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </InputGroup>
+                <Button color="primary" className="ml-1" type="submit">Search</Button>
+              </div>
+            </Form>
           </div>
           <PerfectScrollbar
             className="chat-user-list-wrapper list-group"

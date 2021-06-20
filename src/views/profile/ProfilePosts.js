@@ -85,7 +85,7 @@ const ProfilePosts = (props) => {
               </Card>
             )
           })
-        : null}
+        : <p>This user didn't posted any article.</p> }
     </>
   )
 }

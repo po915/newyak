@@ -141,3 +141,15 @@
 	position: absolute;
 	bottom: 65px;
 }
+
+.recent-heading {
+	cursor: pointer;
+}
+
+._1Lxpd {
+	z-index: 99999999;
+}
+._30Ipg {
+	border: 1px solid #d8d6de !important;
+	background-color: #fff !important;
+}

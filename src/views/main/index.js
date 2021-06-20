@@ -34,8 +34,6 @@ const Profile = () => {
 
   const userInfo = useSelector((state) => state.userinfo.userInfo)
 
-
-
   return (
     <Fragment>
       {userInfo !== null ? (

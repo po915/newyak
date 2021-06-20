@@ -8,8 +8,19 @@ import { useSelector } from "react-redux"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { MessageSquare, Menu, Smile, Image, Send } from "react-feather"
 import {
+  MessageSquare,
+  Menu,
+  Smile,
+  Image,
+  MoreVertical,
+  Send,
+} from "react-feather"
+import {
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
   Form,
   Label,
   InputGroup,
@@ -211,17 +222,48 @@ const ChatLog = (props) => {
   }, [updateMsg])
   // subcription onCreateChat
   useEffect(() => {
-    const subscription = API.graphql(
+    const onCreateChat = API.graphql(
       graphqlOperation(subscriptions.onCreateChat)
     ).subscribe({
       next: (event) => {
         setUpdateMsg(event.value.data.onCreateChat)
       },
     })
+
     return () => {
-      subscription.unsubscribe()
+      onCreateChat.unsubscribe()
     }
   }, [])
+// subcription onUpdateChat
+  useEffect(() => {
+    const onUpdateContact = API.graphql(
+      graphqlOperation(subscriptions.onUpdateContact)
+    ).subscribe({
+      next: (event) => {
+        const updatedContactID = event.value.data.onUpdateContact.id
+        // console.log(updatedContactID, yourContact.id, myContact.id)
+        if(updatedContactID == yourContact.id) setYourContact(event.value.data.onUpdateContact)
+        if(updatedContactID == myContact.id) setMyContact(event.value.data.onUpdateContact)
+        // switch (updatedContactID) {
+        //   case yourContact.id:
+        //     setYourContact(event.value.data.onUpdateContact)
+        //     break
+        //   case myContact.id:
+        //     setMyContact(event.value.data.onUpdateContact)
+        //     break
+        //   default:
+        //     console.log(event.value.data.onUpdateContact, "Updated contact")
+        //     break
+        // }
+        // chatMain()
+      },
+    })
+    return () => {
+      onUpdateContact.unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => newMsgInput.current && newMsgInput.current.focus())
 
   const sendMessage = (e) => {
     e.preventDefault()
@@ -237,6 +279,7 @@ const ChatLog = (props) => {
       API.graphql(
         graphqlOperation(mutations.createChat, { input: newMsg })
       ).then((res) => {
+        newMsgInput.current?.focus()
         setNewMessage("")
       })
       // add new message to your contact
@@ -259,11 +302,13 @@ const ChatLog = (props) => {
 
   const onInputFocus = (e) => {
     setEmojiShow(false)
-    const setUnread = {
-      id: myContact.id,
-      unseenMsgs: false,
-    }
-    API.graphql(graphqlOperation(mutations.updateContact, { input: setUnread }))
+    // console.log(e.target.value.length)
+
+    // const setUnread = {
+    //   id: myContact.id,
+    //   unseenMsgs: false,
+    // }
+    // API.graphql(graphqlOperation(mutations.updateContact, { input: setUnread }))
   }
 
   const acceptInvite = () => {
@@ -336,8 +381,20 @@ const ChatLog = (props) => {
 
   const onEmojiClick = (event, emojiObject) => {
     setEmojiShow(false)
-    newMsgInput.current.focus()
     setNewMessage(newMessage + emojiObject.emoji)
+    newMsgInput.current.focus()
+  }
+
+  const blockContact = () => {
+    if (confirm("Are you sure want to block this user?")) {
+      const update = {
+        id: myContact.id,
+        accepted: "blocked",
+      }
+      API.graphql(
+        graphqlOperation(mutations.updateContact, { input: update })
+      ).then((res) => console.log(res))
+    }
   }
 
   const chatMain = () => {
@@ -549,9 +606,23 @@ const ChatLog = (props) => {
                 )}
                 <h6 className="mb-0">{selectedUser.name}</h6>
               </div>
+              <div className="d-flex align-items-center">
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    className="btn-icon"
+                    color="transparent"
+                    size="sm">
+                    <MoreVertical size="18" />
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem onClick={blockContact}>
+                      Block Contact
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
             </header>
           </div>
-
           {chatMain()}
         </div>
       ) : null}

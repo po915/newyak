@@ -4,7 +4,6 @@ import * as queries from "@src/graphql/queries"
 import Sidebar from "../BlogSidebar"
 import Avatar from "@components/avatar"
 import { Link } from "react-router-dom"
-import UILoader from "@components/ui-loader"
 import {
   Row,
   Col,
@@ -12,7 +11,7 @@ import {
   CardBody,
   CardTitle,
   Button,
-  CardImg,
+  CardImg, 
   Media,
 } from "reactstrap"
 
@@ -26,7 +25,7 @@ const BlogList = () => {
 
   useEffect(async () => {
     const articles = await API.graphql(
-      graphqlOperation(queries.articleByStatus, { status: "published" })
+      graphqlOperation(queries.articleByStatus, { status: "published", sortDirection: 'DESC'})
     )
     const data = []
     articles.data?.articleByStatus?.items.map((item, index) => {
@@ -119,21 +118,6 @@ const BlogList = () => {
               <div className="blog-list-wrapper">
                 <h2>All articles on the platform.</h2>
                 <Row>{renderRenderList()}</Row>
-                {/* <Row>
-                  <Col className="text-center" sm="12">
-                    <Button
-                      color="primary"
-                      className="border-0 mb-1 profile-load-more"
-                      size="sm"
-                      onClick={handleBlock}>
-                      <UILoader
-                        blocking={block}
-                        overlayColor="rgba(255,255,255, .5)">
-                        <span> Load More</span>
-                      </UILoader>
-                    </Button>
-                  </Col>
-                </Row> */}
               </div>
             ) : (
               <div className="show">

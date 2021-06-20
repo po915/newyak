@@ -48,7 +48,8 @@ const EmailVerify = () => {
       console.log(res, "Resend Result")
     })
   }
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault()
     setIsLogging(true)
     try {
       Auth.confirmSignUp(email, code)

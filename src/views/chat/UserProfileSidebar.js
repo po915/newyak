@@ -1,20 +1,15 @@
-// ** Custom Components
-import Avatar from "@components/avatar"
-
-// ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { X, Mail, PhoneCall, Trash, Slash } from "react-feather"
+import { X, Mail, PhoneCall, Slash, Globe, Heart, Award } from "react-feather"
 import { useEffect, useState } from "react"
 import { API, graphqlOperation } from "aws-amplify"
 import * as queries from "@src/graphql/queries"
 import * as mutations from "@src/graphql/mutations"
-
 import { useSelector } from "react-redux"
 
 const UserProfileSidebar = (props) => {
   // ** Props
-  const { user, handleUserSidebarRight, userSidebarRight } = props
+  const { handleUserSidebarRight, userSidebarRight } = props
   const [myContact, setMyContact] = useState({})
   const [yourContact, setYourContact] = useState({})
 
@@ -23,9 +18,10 @@ const UserProfileSidebar = (props) => {
 
   useEffect(() => {
     getContact()
-  }, [])
+  }, [selectedUser])
 
   function getContact() {
+    console.log(selectedUser, "selectedUSer")
     if (Object.keys(selectedUser).length) {
       var filter_1 = {
         ownerID: { eq: currentUser.id },
@@ -67,12 +63,19 @@ const UserProfileSidebar = (props) => {
   }
 
   const blockContact = () => {
-    if (Object.keys(myContact).length > 0) {
-      const update = {
-        id: myContact.id,
-        accepted: "blocked",
+    if (confirm("Are you sure want to block this user?")) {
+      if (Object.keys(myContact).length > 0) {
+        const update = {
+          id: myContact.id,
+          accepted: "blocked",
+        }
+        console.log(update)
+        API.graphql(
+          graphqlOperation(mutations.updateContact, { input: update })
+        ).then((res) => console.log(res))
+      } else {
+        console.log(myContact, "my contact")
       }
-      API.graphql(graphqlOperation(mutations.updateContact, { input: update }))
     }
   }
 
@@ -86,26 +89,6 @@ const UserProfileSidebar = (props) => {
           <X size={14} />
         </span>
         <div className="header-profile-sidebar">
-          {/* {Object.keys(selectedUser).length > 0 && selectedUser.avatar ? (
-            <Avatar
-              className="box-shadow-1 avatar-border"
-              size="xl"
-              img={selectedUser.avatar}
-              imgHeight="70"
-              imgWidth="70"
-            />
-          ) : (
-            <Avatar
-              className="box-shadow-1 avatar-border"
-              size="xl"
-              content={selectedUser.name}
-              initials
-              color="light-primary"
-              imgHeight="70"
-              imgWidth="70"
-            />
-          )} */}
-
           <h4 className="chat-user-name">{selectedUser.name}</h4>
         </div>
       </header>
@@ -118,6 +101,10 @@ const UserProfileSidebar = (props) => {
           <h6 className="section-label mb-1 mt-3">Personal Information</h6>
           <ul className="list-unstyled">
             <li className="mb-1">
+              <Heart className="mr-50" size={17} />
+              <span className="align-middle">{selectedUser.gender}</span>
+            </li>
+            <li className="mb-1">
               <Mail className="mr-50" size={17} />
               <span className="align-middle">{selectedUser.email}</span>
             </li>
@@ -125,21 +112,25 @@ const UserProfileSidebar = (props) => {
               <PhoneCall className="mr-50" size={17} />
               <span className="align-middle">{selectedUser.phone}</span>
             </li>
+            <li className="mb-1">
+              <Globe className="mr-50" size={17} />
+              <span className="align-middle">{selectedUser.country}</span>
+            </li>
           </ul>
         </div>
-        <div className="more-options">
+        {/* <div className="more-options">
           <h6 className="section-label mb-1 mt-3">Options</h6>
           <ul className="list-unstyled">
-            {/* <li className="cursor-pointer mb-1" onClick={deleteContact}>
+            <li className="cursor-pointer mb-1" onClick={deleteContact}>
               <Trash className="mr-50" size={17} />
               <span className="align-middle">Delete Contact</span>
-            </li> */}
+            </li>
             <li className="cursor-pointer" onClick={blockContact}>
               <Slash className="mr-50" size={17} />
               <span className="align-middle">Block Contact</span>
             </li>
           </ul>
-        </div>
+        </div> */}
       </PerfectScrollbar>
     </div>
   )

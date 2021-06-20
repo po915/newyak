@@ -18,7 +18,7 @@ const BlogSidebar = () => {
 
   useEffect(() => {
     API.graphql(
-      graphqlOperation(queries.articleByStatus, { status: "published", limit: 5 })
+      graphqlOperation(queries.articleByStatus, { status: "published", limit: 5, sortDirection: 'DESC' })
     ).then((res) => {
       setArticles(res.data.articleByStatus.items)
     })
@@ -42,12 +42,15 @@ const BlogSidebar = () => {
             />
           </Link>
           <Media body>
-            <h6 className="blog-recent-post-title">
-              <Link
+            <h6 className="blog-recent-post-title text-body-heading recent-heading">
+              {/* <Link
                 className="text-body-heading recent-heading"
                 to={`/blog/detail/${article.id}`}>
                 {article.title}
-              </Link>
+              </Link> */}
+              {/* <p className="text-body-heading recent-heading"> */}
+                {article.title}
+              {/* </p> */}
             </h6>
             {/* <div className="text-muted mb-0">{article.createdAt}</div> */}
           </Media>
